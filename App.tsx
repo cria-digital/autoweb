@@ -1,20 +1,43 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from "react-native";
+import { RecoilRoot } from "recoil";
+import Constants from "expo-constants";
+import Navigation from "./src/navigation";
+import { StatusBar } from "expo-status-bar";
+import useLocalFonts from "./src/hooks/useLocalFonts";
+import { useCallback } from "react";
+import * as SplashScreen from "expo-splash-screen";
+import {
+  configureFonts,
+  DefaultTheme,
+  Provider as PaperProvider,
+} from "react-native-paper";
 
-export default function App() {
+const App = () => {
+  const { fontsLoaded } = useLocalFonts();
+  const theme = {
+    ...DefaultTheme,
+  };
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) await SplashScreen.hideAsync();
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+    <PaperProvider theme={theme}>
       <StatusBar style="auto" />
-    </View>
+      <View
+        onLayout={onLayoutRootView}
+        style={{ marginTop: Constants.statusBarHeight }}
+      />
+      <RecoilRoot>
+        <Navigation />
+      </RecoilRoot>
+    </PaperProvider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
