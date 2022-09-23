@@ -5,6 +5,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import FilterVehiclesScreen from "../screens/vehicles/filterVehicles";
 import RegisterAvaliation from "../screens/vehicles/registerAvaliation";
 import ViewAvaliationScreen from "../screens/vehicles/viewAvaliation";
+import RegisterPurchase from "../screens/vehicles/purchase/registerPurchase";
+import ViewPurchases from "../screens/vehicles/purchase/viewPurchases";
+import ContractsPurchase from "../screens/vehicles/purchase/contracts";
 
 const Navigation = () => {
   const Stack = createNativeStackNavigator();
@@ -23,6 +26,11 @@ const Navigation = () => {
           options={notHeader}
         />
         <Stack.Screen
+          name="RegisterPurchase"
+          component={RegisterPurchase}
+          options={notHeader}
+        />
+        <Stack.Screen
           name="RegisterAvaliation"
           component={RegisterAvaliation}
           options={notHeader}
@@ -30,6 +38,16 @@ const Navigation = () => {
         <Stack.Screen
           name="ViewAvaliation"
           component={ViewAvaliationScreen}
+          options={notHeader}
+        />
+        <Stack.Screen
+          name="ViewPurchase"
+          component={ViewPurchases}
+          options={notHeader}
+        />
+        <Stack.Screen
+          name="ContractsPurchase"
+          component={ContractsPurchase}
           options={notHeader}
         />
       </Stack.Navigator>

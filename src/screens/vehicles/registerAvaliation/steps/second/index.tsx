@@ -9,7 +9,6 @@ import InputComponent from "../../../../../components/input";
 import InputLayout from "../../../../../components/inputLayout";
 import NextBackButtons from "../../../../../components/nextBackButtons";
 import StepsTitle from "../../../../../components/stepsTitle";
-import { cancelRegister } from "../../../../../utils/cancelRegister";
 
 const SecondStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
   props
@@ -22,8 +21,8 @@ const SecondStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
     errors,
     setFieldValue,
     handleSubmit,
+    cancelRegister,
   } = props;
-  const { goBack } = useNavigation();
   const nextStep = () => {
     if (!values.ano || !values.anoFabricacao) {
       handleSubmit();
@@ -184,7 +183,7 @@ const SecondStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
           firstButtonLabel="Próximo"
           secondButtonLabel="Cancelar"
           firstButtonOnPress={nextStep}
-          secondButtonOnPress={() => cancelRegister(goBack)}
+          secondButtonOnPress={cancelRegister}
         />
       </View>
     </View>

@@ -21,7 +21,7 @@ const DoubleButtonsComponent: React.FC<DoubleButtonsProps> = (props) => {
       />
       <ButtonComponent
         mode="contained"
-        label={"Cadastrar avaliação"}
+        label={labelRight}
         onPress={onPressRight}
         style={styles.button}
       />

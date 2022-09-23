@@ -4,8 +4,12 @@ import { vehiclesAwaitingApprovalData } from "../../../../data";
 import NextBackButtons from "../../../components/nextBackButtons";
 import PaginationPages from "../../../components/paginationPages";
 import PicturesHorizontalMosaic from "../../../components/picturesHorizontalMosaic";
+import ReportComponent from "../../../components/report";
 import SimpleNav from "../../../components/simpleNav";
+import RenderAvaliationPrices from "./renderAvaliationPrices";
+import RenderChecklistsAvaliations from "./renderChecklists";
 import RenderDoubleTextColumns from "./renderDoubleTextColumns";
+import RenderViewVehicles from "./renderViewVehicles";
 import styles from "./styles";
 import VehicleAvaliationDetails from "./vehicleAvaliationDetails";
 
@@ -30,27 +34,54 @@ const ViewAvaliationScreen = ({ navigation, route }: any) => {
           setCurrentPage={setCurrentPage}
         />
 
-        <PicturesHorizontalMosaic pictures={vehiclesImages?.vehicleImage} />
+        {currentPage === "Veiculo" && (
+          <RenderViewVehicles
+            anoFabricacao="2019"
+            anoModelo="2019"
+            blindado="sim"
+            cambio="automático"
+            chassi="12345678901"
+            combustivel="gasolina"
+            cor="preto"
+            empresa="Empresa 1"
+            filial="Filial 1"
+            marca="Marca do carro"
+            modelo="Modelo do carro"
+            numeroPartidas="19"
+            numeroPortas="4"
+            placa="AAA1234"
+            renavan="123456789010"
+            tipoVeiculo="camioneta"
+            vehicleImages={vehiclesImages?.vehicleImage}
+            versao="2.0"
+          />
+        )}
+        {currentPage === "Checklist" && <RenderChecklistsAvaliations />}
+        {currentPage === "Média de Avaliadores" && (
+          <RenderAvaliationPrices
+            firstTitle="Valor de venda FIPE (R$)"
+            firstPrice={10000}
+            secondTitle="Valor de venda Web Motors (R$)"
+            secondPrice={10000}
+            thirdTitle="Valor de venda Região (R$)"
+            thirdPrice={10000}
+            fourthTitle="Valor médio (R$)"
+            fourthPrice={10000}
+          />
+        )}
 
-        <VehicleAvaliationDetails
-          anoFabricacao="2019"
-          anoModelo="2019"
-          blindado="Não"
-          chassi="9BWZZZ377KT000000"
-          cambio="Automático"
-          combustivel="Gasolina"
-          cor="Branco"
-          empresa="Empresa 1"
-          filial="Filial 1"
-          marca="Volkswagen"
-          modelo="Gol"
-          numeroPartidas="1"
-          numeroPortas="4"
-          placa="ABC-1234"
-          renavan="123456789"
-          tipoVeiculo="Carro"
-          versao="1.0"
-        />
+        {currentPage === "Resumo" && (
+          <RenderAvaliationPrices
+            firstTitle="Avaliação da loja"
+            firstPrice={10000}
+            secondTitle="Avaliação eletrônica"
+            secondPrice={10000}
+            thirdTitle="Valor sugerido para venda"
+            thirdPrice={10000}
+            fourthTitle="Lucro previsto"
+            fourthPrice={10000}
+          />
+        )}
 
         <NextBackButtons
           firstButtonLabel="Imprimir"

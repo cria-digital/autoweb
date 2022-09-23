@@ -7,8 +7,9 @@ import Dropdown from "../../../components/dropdown";
 import SimpleNav from "../../../components/simpleNav";
 import styles from "./styles";
 
-const FilterVehiclesScreen = ({ navigation }: any) => {
+const FilterVehiclesScreen = ({ navigation, route }: any) => {
   const { navigate, goBack } = navigation;
+  const { params } = route;
   const [modelVehicles, setModelVehicles] = useState("");
   const [vehicleBrand, setVehicleBrand] = useState("");
   const [yearVehicle, setYearVehicle] = useState("");

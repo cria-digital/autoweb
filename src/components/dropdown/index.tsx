@@ -13,9 +13,11 @@ type DropdownProps = {
   styleMenu?: any;
   required?: boolean;
   placeholder?: string;
+  disabled?: boolean;
   content: object[] | string[];
   errorMessage?: string | string[];
   errors?: any;
+  inputStyle?: any;
   touched?: any;
   onPressMenuItem: (item: string) => void;
 };
@@ -27,13 +29,39 @@ const Dropdown: React.FC<DropdownProps> = (props) => {
     errors,
     touched,
     content,
+    disabled,
     required,
     styleMenu,
+    inputStyle,
     placeholder,
     errorMessage,
     onPressMenuItem,
   } = props;
   const [open, setOpen] = useState(false);
+
+  const RenderInput = () => (
+    <InputComponent
+      mode="flat"
+      underlineColor="transparent"
+      activeUnderlineColor="transparent"
+      placeholder={placeholder}
+      value={value}
+      editable={false}
+      style={[inputStyle]}
+      right={
+        <TextInput.Icon
+          onPress={() => setOpen(true)}
+          style={styles.opacity}
+          name={() => <ChevronDownIcon />}
+          color={COLORS.black}
+          size={24}
+          rippleColor={"white"}
+        />
+      }
+      activeOutlineColor={"transparent"}
+      outlineColor={"transparent"}
+    />
+  );
 
   return (
     <Menu
@@ -48,28 +76,13 @@ const Dropdown: React.FC<DropdownProps> = (props) => {
           errorMessage={errorMessage}
           style={styles.marginTop20}
         >
-          <TouchableOpacity activeOpacity={0.5} onPress={() => setOpen(true)}>
-            <InputComponent
-              mode="flat"
-              underlineColor="transparent"
-              activeUnderlineColor="transparent"
-              placeholder={placeholder}
-              value={value}
-              editable={false}
-              right={
-                <TextInput.Icon
-                  onPress={() => setOpen(true)}
-                  style={styles.opacity}
-                  name={() => <ChevronDownIcon />}
-                  color={COLORS.black}
-                  size={24}
-                  rippleColor={"white"}
-                />
-              }
-              activeOutlineColor={"transparent"}
-              outlineColor={"transparent"}
-            />
-          </TouchableOpacity>
+          {!disabled ? (
+            <TouchableOpacity activeOpacity={0.5} onPress={() => setOpen(true)}>
+              <RenderInput />
+            </TouchableOpacity>
+          ) : (
+            <RenderInput />
+          )}
           {errors && touched && (
             <Text style={styles.error}>{errorMessage}</Text>
           )}

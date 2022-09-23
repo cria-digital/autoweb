@@ -5,6 +5,8 @@ import COLORS from "../../constants/colors";
 import Dropdown from "../dropdown";
 
 interface CardComponentProps {
+  cardType?: "waiting" | "approved" | "reproved";
+  reprovedMotive?: string;
   vehicleImage: string;
   vehicleName: string;
   carYear: string;
@@ -19,6 +21,8 @@ interface CardComponentProps {
 const CardComponent: React.FC<CardComponentProps> = (props) => {
   const {
     vehicleImage,
+    reprovedMotive,
+    cardType,
     carYear,
     vehicleName,
     licensePlate,
@@ -52,14 +56,27 @@ const CardComponent: React.FC<CardComponentProps> = (props) => {
       </View>
       <View style={styles.footerContainer}>
         <View>
-          <Text style={styles.strongText}>Avaliado por</Text>
+          <Text style={styles.strongText}>
+            {cardType === "reproved" ? "Reprovado por" : "Avaliado por"}
+          </Text>
           <Text style={styles.normalText}>{assessorName}</Text>
         </View>
         <View>
-          <Text style={styles.strongText}>Data da avaliação</Text>
+          <Text style={styles.strongText}>
+            {cardType === "reproved"
+              ? "Data da reprovação"
+              : "Data da avaliação"}
+          </Text>
           <Text style={styles.normalText}>{evaluationDate}</Text>
         </View>
       </View>
+
+      {cardType === "reproved" && (
+        <View style={{ marginTop: 12 }}>
+          <Text style={styles.strongText}>Motivo da reprovação</Text>
+          <Text style={styles.normalText}>{reprovedMotive}</Text>
+        </View>
+      )}
     </View>
   );
 };

@@ -1,10 +1,8 @@
-import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View } from "react-native";
 import { StepsRegisterAvaliationProps } from "..";
 import NextBackButtons from "../../../../../components/nextBackButtons";
 import StepsTitle from "../../../../../components/stepsTitle";
-import { cancelRegister } from "../../../../../utils/cancelRegister";
 import ChecklistContextAvaliation from "./checklist";
 
 const ThirdStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
@@ -18,8 +16,8 @@ const ThirdStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
     values,
     touched,
     errors,
+    cancelRegister,
   } = props;
-  const { goBack } = useNavigation();
   const nextStep = () => {
     if (
       !values.mecanica.custoAproximado ||
@@ -160,7 +158,7 @@ const ThirdStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
           firstButtonLabel="Próximo"
           secondButtonLabel="Cancelar"
           firstButtonOnPress={nextStep}
-          secondButtonOnPress={() => cancelRegister(goBack)}
+          secondButtonOnPress={cancelRegister}
         />
       </View>
     </View>

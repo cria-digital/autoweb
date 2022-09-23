@@ -81,6 +81,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     borderRadius: 8,
     height: 48,
+    elevation: 3,
+    shadowColor: "rgba(0,0,0,0.5)",
   },
   outlinedStyle: {
     backgroundColor: "white",
@@ -88,6 +90,8 @@ const styles = StyleSheet.create({
     borderColor: COLORS.primary,
     borderRadius: 8,
     height: 48,
+    elevation: 5,
+    shadowColor: "rgba(0,0,0,0.5)",
   },
   iconContainer: {
     flexDirection: "row",

@@ -24,7 +24,7 @@ const InputComponent: React.FC<InputComponentProps & TextInputProps> = (
         outlineColor={"transparent"}
         activeUnderlineColor={"transparent"}
         placeholderTextColor={"rgba(0, 0, 0, 0.5)"}
-        style={[styles.input, style]}
+        style={[styles.input, style, !props.multiline && { height: 50 }]}
         theme={{
           fonts: {
             light: {
@@ -50,7 +50,6 @@ const InputComponent: React.FC<InputComponentProps & TextInputProps> = (
 const styles = StyleSheet.create({
   input: {
     backgroundColor: "#fff",
-    height: 50,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderLeftWidth: 1,

@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View } from "react-native";
 import { StepsRegisterAvaliationProps } from "..";
@@ -6,13 +5,18 @@ import InputComponent from "../../../../../components/input";
 import InputLayout from "../../../../../components/inputLayout";
 import NextBackButtons from "../../../../../components/nextBackButtons";
 import StepsTitle from "../../../../../components/stepsTitle";
-import { cancelRegister } from "../../../../../utils/cancelRegister";
 
 const FifthStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
   props
 ) => {
-  const { values, touched, errors, setFieldValue, handleSubmit } = props;
-  const { goBack } = useNavigation();
+  const {
+    values,
+    touched,
+    errors,
+    setFieldValue,
+    handleSubmit,
+    cancelRegister,
+  } = props;
   const nextStep = () => {
     handleSubmit(values);
   };
@@ -91,7 +95,7 @@ const FifthStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
           firstButtonLabel="Próximo"
           secondButtonLabel="Cancelar"
           firstButtonOnPress={nextStep}
-          secondButtonOnPress={() => cancelRegister(goBack)}
+          secondButtonOnPress={cancelRegister}
         />
       </View>
     </View>

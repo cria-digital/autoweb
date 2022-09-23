@@ -7,11 +7,12 @@ interface RadioOptionsProps {
   label: string;
   onPressFirstOption: (text: string) => void;
   onPressSecondOption: (text: string) => void;
-  onPressThirdOption: (text: string) => void;
+  onPressThirdOption?: (text: string) => void;
   actualOption: string;
   firstOption: string;
   secondOption: string;
-  thirdOption: string;
+  thirdOption?: string;
+  style?: any;
 }
 
 const RadioOptions: React.FC<RadioOptionsProps> = (props) => {
@@ -24,9 +25,10 @@ const RadioOptions: React.FC<RadioOptionsProps> = (props) => {
     firstOption,
     secondOption,
     thirdOption,
+    style,
   } = props;
   return (
-    <View style={{ marginTop: 30 }}>
+    <View style={[style ?? { marginTop: 30 }]}>
       <Text
         style={{
           fontFamily: "RalewaySemiBold",
@@ -55,11 +57,14 @@ const RadioOptions: React.FC<RadioOptionsProps> = (props) => {
           onPress={() => onPressSecondOption(secondOption)}
           status={actualOption === secondOption ? "checked" : "unchecked"}
         />
-        <RadioButtonComponent
-          label={thirdOption}
-          onPress={() => onPressThirdOption(thirdOption)}
-          status={actualOption === thirdOption ? "checked" : "unchecked"}
-        />
+        {thirdOption && (
+          <RadioButtonComponent
+            label={thirdOption}
+            onPress={() => onPressThirdOption(thirdOption)}
+            status={actualOption === thirdOption ? "checked" : "unchecked"}
+          />
+        )}
+        {!thirdOption && <View />}
       </View>
     </View>
   );

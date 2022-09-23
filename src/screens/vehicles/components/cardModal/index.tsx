@@ -8,13 +8,14 @@ interface CardModalProps {
   setVisible: (visible: boolean) => void;
   animationType: "slide" | "fade" | "none";
   onPressMenuItems: (item: string) => void;
+  labels: string[];
 }
 
 const CardModal: React.FC<CardModalProps> = (props) => {
-  const { visible, setVisible, animationType, onPressMenuItems } = props;
-  const labels = ["Visualizar", "Editar", "Aprovar/Reprovar", "Excluir"];
+  const { visible, setVisible, animationType, onPressMenuItems, labels } =
+    props;
   const RenderMenuItems = ({ label, index }: any) => {
-    const lastIndexMenu = index === labels.length - 1 && {
+    const lastIndexMenu = index === labels?.length - 1 && {
       color: COLORS.primary,
     };
     return (

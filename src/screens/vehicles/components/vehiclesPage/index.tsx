@@ -1,22 +1,19 @@
-import React, { memo, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  Text,
-  TouchableOpacity,
-} from "react-native";
-import { Menu, Provider } from "react-native-paper";
-import { vehiclesAwaitingApprovalData } from "../../../../../data";
-import CardComponent from "../../../../components/card";
+import React, { useState } from "react";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Provider } from "react-native-paper";
+import AlertModal from "../../../../components/alertModal";
 import DoubleButtonsComponent from "../../../../components/doubleButtons";
 import FilterButton from "../../../../components/filterButton";
 import InputComponent from "../../../../components/input";
+import LoadMore from "../../../../components/loadMore";
 import RadioPagination from "../../../../components/radioPagination";
 import COLORS from "../../../../constants/colors";
 import MagnifyIcon from "../../../../icons/magnify";
 import RightInputIcon from "../../../../icons/rightInputIcon";
+import AlertModalsForVehiclePage from "../alertModals";
 import CardModal from "../cardModal";
+import GenerateReport from "../generateReport";
+import WaitingAndApproveds from "../waitingAndReproveds";
 
 interface VehiclesPageProps {
   assessmentStatus: string;
@@ -27,28 +24,48 @@ interface VehiclesPageProps {
 const VehiclesPage: React.FC<VehiclesPageProps> = (props) => {
   const { assessmentStatus, setAssessmentStatus, navigate } = props;
   const [cardOptionsVisible, setCardOptionsVisible] = useState(false);
+  const [generateReportModal, setGenerateReportModal] = useState(false);
+  const [deleteAvaliationModal, setDeleteAvaliationModal] = useState(false);
+  const [approvalModal, setApprovalModal] = useState(false);
+  const [approvalOrReprovalModal, setApprovalOrReprovalModal] = useState(false);
   const [cardId, setCardId] = useState<number | null>(null);
-  const renderAwaitingApproval = ({ item, index }: any) => (
-    <CardComponent
-      assessorName={item.assessorName}
-      carValue={item.carValue}
-      carYear={item.carYear}
-      evaluationDate={item.evaluationDate}
-      licensePlate={item.licensePlate}
-      vehicleImage={item.vehicleImage[0]}
-      vehicleName={item.vehicleName}
-      onPressDots={() => {
-        setCardOptionsVisible(true);
-        setCardId(item.id);
-      }}
-    />
-  );
+
+  const LabelsOptionsName = () => {
+    if (assessmentStatus === "Waiting")
+      return ["Visualizar", "Editar", "Aprovar/Reprovar", "Excluir"];
+    else return ["Visualizar", "Editar", "Aprovar", "Excluir"];
+  };
+
+  const switchOptionsMenu = (item: any) => {
+    switch (item) {
+      case "Visualizar":
+        navigate("ViewAvaliation", {
+          id: cardId,
+        });
+        break;
+      case "Editar":
+        alert("Trabalhando na edição");
+        break;
+      case "Aprovar":
+        setCardOptionsVisible(false);
+        setApprovalModal(true);
+        break;
+      case "Aprovar/Reprovar":
+        setCardOptionsVisible(false);
+        setApprovalOrReprovalModal(true);
+        break;
+      case "Excluir":
+        setCardOptionsVisible(false);
+        setDeleteAvaliationModal(true);
+        break;
+    }
+  };
   return (
     <Provider>
       <DoubleButtonsComponent
         labelLeft="Gerar relatório"
         labelRight="Cadastrar avaliação"
-        onPressLeft={() => {}}
+        onPressLeft={() => setGenerateReportModal(true)}
         onPressRight={() => navigate("RegisterAvaliation")}
       />
 
@@ -59,7 +76,10 @@ const VehiclesPage: React.FC<VehiclesPageProps> = (props) => {
             () => (
               <MagnifyIcon color={"#000000"} />
             ),
-            () => navigate("FilterVehicles")
+            () =>
+              navigate("FilterVehicles", {
+                routeName: "Vehicles",
+              })
           )}
         />
       </View>
@@ -70,49 +90,59 @@ const VehiclesPage: React.FC<VehiclesPageProps> = (props) => {
         <RadioPagination
           assessmentStatus={assessmentStatus}
           setAssessmentStatus={setAssessmentStatus}
+          firstStatus="Waiting"
+          secondStatus="Approved"
+          firstLabel="Aguardando aprovação"
+          secondLabel="Reprovado"
         />
       </View>
 
-      {assessmentStatus === "Waiting" ? (
-        <>
-          <FlatList
-            data={vehiclesAwaitingApprovalData}
-            keyExtractor={(item, index) => `${item}${index}`}
-            renderItem={renderAwaitingApproval}
-            style={styles.awaitingApprovalList}
-            extraData={vehiclesAwaitingApprovalData}
-            maxToRenderPerBatch={5}
-          />
+      <WaitingAndApproveds
+        assessmentStatus={assessmentStatus}
+        setCardOptionsVisible={setCardOptionsVisible}
+        setCardId={setCardId}
+      />
 
-          <TouchableOpacity
-            style={styles.loadMoreContainer}
-            activeOpacity={0.5}
-          >
-            <Text style={styles.loadMore}>Carregar mais</Text>
-          </TouchableOpacity>
-        </>
-      ) : null}
+      <LoadMore />
       <CardModal
+        labels={LabelsOptionsName()}
         animationType="fade"
         visible={cardOptionsVisible}
         setVisible={setCardOptionsVisible}
-        onPressMenuItems={(item: string) => {
-          switch (item) {
-            case "Visualizar":
-              navigate("ViewAvaliation", {
-                id: cardId,
-              });
-              break;
-            case "Editar":
-              alert("Trabalhando na edição");
-              break;
-            case "Aprovar/Reprovar":
-              alert("Trabalhando na aprovação");
-              break;
-            case "Excluir":
-              alert("excluir");
-              break;
-          }
+        onPressMenuItems={(item: string) => switchOptionsMenu(item)}
+      />
+      <GenerateReport
+        animationType="fade"
+        visible={generateReportModal}
+        setVisible={setGenerateReportModal}
+      />
+      <AlertModalsForVehiclePage
+        approvalAvaliationVisible={approvalModal}
+        setApprovalAvaliationVisible={setApprovalModal}
+        deleteAvaliationVisible={deleteAvaliationModal}
+        setDeleteAvaliationVisible={setDeleteAvaliationModal}
+      />
+      <AlertModal
+        animationType="fade"
+        visible={approvalOrReprovalModal}
+        setVisible={setApprovalOrReprovalModal}
+        warningMessage
+        approvalButton
+        firstButtonLabel="Aprovar avaliação"
+        secondButtonLabel="Reprovar avaliação"
+        beforeFirstStrongText="Você deseja"
+        firstStrongText="aprovar"
+        middleStrongText="ou"
+        secondStrongText="reprovar"
+        afterSecondStrongText="a avaliação?"
+        closeIcon
+        firstButtonPress={() => {
+          setApprovalOrReprovalModal(false);
+          alert("Aprovar");
+        }}
+        secondButtonPress={() => {
+          setApprovalOrReprovalModal(false);
+          alert("Reprovar");
         }}
       />
     </Provider>
@@ -132,16 +162,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "rgba(0, 0, 0, 0.04)",
   },
-  loadMore: {
-    textAlign: "center",
-    color: COLORS.black,
-    fontSize: 18,
-    fontFamily: "Poppins",
-    width: "auto",
-  },
-  loadMoreContainer: {
-    marginVertical: 24,
-  },
 });
 
-export default memo(VehiclesPage);
+export default VehiclesPage;
