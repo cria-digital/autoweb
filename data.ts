@@ -102,6 +102,7 @@ export const vehiclesGeneralData = [
     despachante: "Não",
     vendido: "Não",
     status: StatusGeneral.AV,
+    inventoryDays: 30,
   },
   {
     id: 2,
@@ -117,6 +118,7 @@ export const vehiclesGeneralData = [
     despachante: "Não",
     vendido: "Não",
     status: StatusGeneral.CMP,
+    inventoryDays: 30,
   },
   {
     id: 3,
@@ -132,6 +134,7 @@ export const vehiclesGeneralData = [
     despachante: "Não",
     vendido: "Não",
     status: StatusGeneral.EST,
+    inventoryDays: 30,
   },
   {
     id: 4,
@@ -147,6 +150,7 @@ export const vehiclesGeneralData = [
     despachante: "Não",
     vendido: "Não",
     status: StatusGeneral.VND,
+    inventoryDays: 30,
   },
   {
     id: 4,
@@ -162,5 +166,6 @@ export const vehiclesGeneralData = [
     despachante: "Não",
     vendido: "Não",
     status: StatusGeneral.VDD,
+    inventoryDays: 30,
   },
 ];

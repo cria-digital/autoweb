@@ -6,7 +6,9 @@ import DoubleButtonsComponent from "../../../../components/doubleButtons";
 import FilterButton from "../../../../components/filterButton";
 import InputComponent from "../../../../components/input";
 import LoadMore from "../../../../components/loadMore";
+import ModalApprovedOrReproved from "../../../../components/modalApproveOrReprove";
 import RadioPagination from "../../../../components/radioPagination";
+import SimpleModal from "../../../../components/simpleModal";
 import COLORS from "../../../../constants/colors";
 import MagnifyIcon from "../../../../icons/magnify";
 import RightInputIcon from "../../../../icons/rightInputIcon";
@@ -27,7 +29,17 @@ const VehiclesPage: React.FC<VehiclesPageProps> = (props) => {
   const [generateReportModal, setGenerateReportModal] = useState(false);
   const [deleteAvaliationModal, setDeleteAvaliationModal] = useState(false);
   const [approvalModal, setApprovalModal] = useState(false);
+  const [approvalSuccessModal, setApprovalSuccessModal] = useState(false);
+  const [avaliationDeletedSuccess, setAvaliationDeletedSuccess] =
+    useState(false);
   const [approvalOrReprovalModal, setApprovalOrReprovalModal] = useState(false);
+
+  const [approvedModal, setApprovedModal] = useState(false);
+  const [reprovedModal, setReprovedModal] = useState(false);
+
+  const [avaliationSuccess, setAvaliationSuccess] = useState(false);
+  const [motiveSended, setMotiveSended] = useState(false);
+
   const [cardId, setCardId] = useState<number | null>(null);
 
   const LabelsOptionsName = () => {
@@ -44,7 +56,7 @@ const VehiclesPage: React.FC<VehiclesPageProps> = (props) => {
         });
         break;
       case "Editar":
-        alert("Trabalhando na edição");
+        navigate("RegisterAvaliation");
         break;
       case "Aprovar":
         setCardOptionsVisible(false);
@@ -61,91 +73,147 @@ const VehiclesPage: React.FC<VehiclesPageProps> = (props) => {
     }
   };
   return (
-    <Provider>
-      <DoubleButtonsComponent
-        labelLeft="Gerar relatório"
-        labelRight="Cadastrar avaliação"
-        onPressLeft={() => setGenerateReportModal(true)}
-        onPressRight={() => navigate("RegisterAvaliation")}
-      />
+    <View style={{ height: "100%" }}>
+      <Provider>
+        <View style={{ height: "auto" }}>
+          <DoubleButtonsComponent
+            labelLeft="Gerar relatório"
+            labelRight="Cadastrar avaliação"
+            onPressLeft={() => setGenerateReportModal(true)}
+            onPressRight={() => navigate("RegisterAvaliation")}
+          />
 
-      <View style={styles.inputView}>
-        <InputComponent
-          mode="flat"
-          right={RightInputIcon(
-            () => (
-              <MagnifyIcon color={"#000000"} />
-            ),
-            () =>
-              navigate("FilterVehicles", {
-                routeName: "Vehicles",
-              })
-          )}
+          <View style={styles.inputView}>
+            <InputComponent
+              mode="flat"
+              right={RightInputIcon(
+                () => (
+                  <MagnifyIcon color={"#000000"} />
+                ),
+                () =>
+                  navigate("FilterVehicles", {
+                    routeName: "Vehicles",
+                  })
+              )}
+            />
+          </View>
+
+          <FilterButton label="Filtrar" />
+
+          <View style={styles.radioButtons}>
+            <RadioPagination
+              assessmentStatus={assessmentStatus}
+              setAssessmentStatus={setAssessmentStatus}
+              firstStatus="Waiting"
+              secondStatus="Approved"
+              firstLabel="Aguardando aprovação"
+              secondLabel="Reprovado"
+            />
+          </View>
+        </View>
+
+        <View style={{ height: "auto" }}>
+          <WaitingAndApproveds
+            assessmentStatus={assessmentStatus}
+            setCardOptionsVisible={setCardOptionsVisible}
+            setCardId={setCardId}
+          />
+        </View>
+
+        <CardModal
+          labels={LabelsOptionsName()}
+          animationType="fade"
+          visible={cardOptionsVisible}
+          setVisible={setCardOptionsVisible}
+          onPressMenuItems={(item: string) => switchOptionsMenu(item)}
         />
-      </View>
-
-      <FilterButton label="Filtrar" />
-
-      <View style={styles.radioButtons}>
-        <RadioPagination
-          assessmentStatus={assessmentStatus}
-          setAssessmentStatus={setAssessmentStatus}
-          firstStatus="Waiting"
-          secondStatus="Approved"
-          firstLabel="Aguardando aprovação"
-          secondLabel="Reprovado"
+        <GenerateReport
+          animationType="fade"
+          visible={generateReportModal}
+          setVisible={setGenerateReportModal}
         />
-      </View>
+        <AlertModalsForVehiclePage
+          approvalAvaliationVisible={approvalModal}
+          setApprovalAvaliationVisible={setApprovalModal}
+          deleteAvaliationVisible={deleteAvaliationModal}
+          setDeleteAvaliationVisible={setDeleteAvaliationModal}
+          approvalSuccessModal={approvalSuccessModal}
+          setApprovalSuccessModal={setApprovalSuccessModal}
+          setAvaliationDeletedSuccess={setAvaliationDeletedSuccess}
+          avaliationDeletedSuccess={avaliationDeletedSuccess}
+        />
+        <AlertModal
+          animationType="fade"
+          visible={approvalOrReprovalModal}
+          setVisible={setApprovalOrReprovalModal}
+          warningMessage
+          approvalButton
+          firstButtonLabel="Aprovar avaliação"
+          secondButtonLabel="Reprovar avaliação"
+          beforeFirstStrongText="Você deseja"
+          firstStrongText="aprovar"
+          middleStrongText="ou"
+          secondStrongText="reprovar"
+          afterSecondStrongText="a avaliação?"
+          closeIcon
+          firstButtonPress={() => {
+            setApprovalOrReprovalModal(false);
+            setApprovedModal(true);
+          }}
+          secondButtonPress={() => {
+            setApprovalOrReprovalModal(false);
+            setReprovedModal(true);
+          }}
+        />
 
-      <WaitingAndApproveds
-        assessmentStatus={assessmentStatus}
-        setCardOptionsVisible={setCardOptionsVisible}
-        setCardId={setCardId}
-      />
+        <ModalApprovedOrReproved
+          isChecked
+          visible={approvedModal}
+          animationType="fade"
+          onPressFirstButton={() => {
+            setApprovedModal(false);
+            setAvaliationSuccess(true);
+          }}
+          onPressSecondButton={() => {
+            setApprovedModal(false);
+            navigate("Vehicles");
+          }}
+        />
 
-      <LoadMore />
-      <CardModal
-        labels={LabelsOptionsName()}
-        animationType="fade"
-        visible={cardOptionsVisible}
-        setVisible={setCardOptionsVisible}
-        onPressMenuItems={(item: string) => switchOptionsMenu(item)}
-      />
-      <GenerateReport
-        animationType="fade"
-        visible={generateReportModal}
-        setVisible={setGenerateReportModal}
-      />
-      <AlertModalsForVehiclePage
-        approvalAvaliationVisible={approvalModal}
-        setApprovalAvaliationVisible={setApprovalModal}
-        deleteAvaliationVisible={deleteAvaliationModal}
-        setDeleteAvaliationVisible={setDeleteAvaliationModal}
-      />
-      <AlertModal
-        animationType="fade"
-        visible={approvalOrReprovalModal}
-        setVisible={setApprovalOrReprovalModal}
-        warningMessage
-        approvalButton
-        firstButtonLabel="Aprovar avaliação"
-        secondButtonLabel="Reprovar avaliação"
-        beforeFirstStrongText="Você deseja"
-        firstStrongText="aprovar"
-        middleStrongText="ou"
-        secondStrongText="reprovar"
-        afterSecondStrongText="a avaliação?"
-        closeIcon
-        firstButtonPress={() => {
-          setApprovalOrReprovalModal(false);
-          alert("Aprovar");
-        }}
-        secondButtonPress={() => {
-          setApprovalOrReprovalModal(false);
-          alert("Reprovar");
-        }}
-      />
-    </Provider>
+        <ModalApprovedOrReproved
+          visible={reprovedModal}
+          animationType="fade"
+          onPressFirstButton={() => {
+            setReprovedModal(false);
+            setMotiveSended(true);
+          }}
+          onPressSecondButton={() => {
+            setReprovedModal(false);
+            navigate("Vehicles");
+          }}
+        />
+
+        <SimpleModal
+          visible={avaliationSuccess}
+          animationType="fade"
+          onPress={() => {
+            setAvaliationSuccess(false);
+            navigate("RegisterPurchase");
+          }}
+          title="Avaliação realizada!"
+        />
+
+        <SimpleModal
+          visible={motiveSended}
+          animationType="fade"
+          onPress={() => {
+            setMotiveSended(false);
+            navigate("Vehicles");
+          }}
+          title="Motivo enviado."
+        />
+      </Provider>
+    </View>
   );
 };
 
@@ -155,7 +223,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   radioButtons: {
-    marginVertical: 28,
+    marginTop: 14,
+    marginBottom: 14,
   },
   awaitingApprovalList: {
     marginHorizontal: -18,

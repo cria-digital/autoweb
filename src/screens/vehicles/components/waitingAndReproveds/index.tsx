@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { vehiclesAwaitingApprovalData } from "../../../../../data";
 import Card from "../../../../components/card";
+import LoadMore from "../../../../components/loadMore";
 
 interface WaitingAndApprovedsProps {
   assessmentStatus: string;
@@ -54,7 +55,10 @@ const WaitingAndApproveds: React.FC<WaitingAndApprovedsProps> = (props) => {
           renderItem={renderAwaitingApproval}
           style={styles.awaitingApprovalList}
           extraData={vehiclesAwaitingApprovalData}
+          contentContainerStyle={styles.containerStyle}
           maxToRenderPerBatch={5}
+          ListFooterComponent={() => <LoadMore />}
+          scrollEnabled
         />
       ) : (
         <FlatList
@@ -63,7 +67,10 @@ const WaitingAndApproveds: React.FC<WaitingAndApprovedsProps> = (props) => {
           renderItem={renderReproveds}
           style={styles.awaitingApprovalList}
           extraData={vehiclesAwaitingApprovalData}
+          contentContainerStyle={styles.containerStyle}
           maxToRenderPerBatch={5}
+          ListFooterComponent={() => <LoadMore />}
+          scrollEnabled
         />
       )}
     </View>
@@ -75,6 +82,9 @@ const styles = StyleSheet.create({
     marginHorizontal: -18,
     borderTopWidth: 1,
     borderTopColor: "rgba(0, 0, 0, 0.04)",
+  },
+  containerStyle: {
+    paddingBottom: "110%",
   },
 });
 

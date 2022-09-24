@@ -6,6 +6,10 @@ interface AlertModalForVehiclePage {
   setDeleteAvaliationVisible: (visible: boolean) => void;
   approvalAvaliationVisible: boolean;
   setApprovalAvaliationVisible: (visible: boolean) => void;
+  approvalSuccessModal: boolean;
+  setApprovalSuccessModal: (visible: boolean) => void;
+  avaliationDeletedSuccess: boolean;
+  setAvaliationDeletedSuccess: (visible: boolean) => void;
 }
 
 const AlertModalsForVehiclePage: React.FC<AlertModalForVehiclePage> = (
@@ -16,6 +20,10 @@ const AlertModalsForVehiclePage: React.FC<AlertModalForVehiclePage> = (
     setDeleteAvaliationVisible,
     approvalAvaliationVisible,
     setApprovalAvaliationVisible,
+    approvalSuccessModal,
+    setApprovalSuccessModal,
+    avaliationDeletedSuccess,
+    setAvaliationDeletedSuccess,
   } = props;
 
   return (
@@ -32,7 +40,10 @@ const AlertModalsForVehiclePage: React.FC<AlertModalForVehiclePage> = (
         secondStrongText="avaliação"
         afterSecondStrongText="desse veículo?"
         deleteMessage
-        cancelOrClose={() => alert("exclusão não implementada")}
+        cancelOrClose={() => {
+          setDeleteAvaliationVisible(false);
+          setAvaliationDeletedSuccess(true);
+        }}
       />
       <AlertModal
         animationType="fade"
@@ -46,7 +57,38 @@ const AlertModalsForVehiclePage: React.FC<AlertModalForVehiclePage> = (
         secondStrongText="avaliação"
         afterSecondStrongText="desse veículo?"
         warningMessage
-        cancelOrClose={() => alert("aprovação não implementada")}
+        cancelOrClose={() => {
+          setApprovalAvaliationVisible(false);
+          setApprovalSuccessModal(true);
+        }}
+      />
+
+      <AlertModal
+        visible={approvalSuccessModal}
+        animationType="fade"
+        firstButtonLabel="Fechar"
+        okMessage
+        beforeFirstStrongText="A"
+        firstStrongText="avaliação"
+        middleStrongText="foi"
+        secondStrongText="aprovada"
+        afterSecondStrongText="com sucesso!"
+        setVisible={setApprovalSuccessModal}
+        cancelOrClose={() => setApprovalSuccessModal(false)}
+      />
+
+      <AlertModal
+        visible={avaliationDeletedSuccess}
+        animationType="fade"
+        firstButtonLabel="Fechar"
+        okMessage
+        beforeFirstStrongText="A"
+        firstStrongText="avaliação"
+        middleStrongText="foi"
+        secondStrongText="excluída"
+        afterSecondStrongText="com sucesso!"
+        setVisible={setAvaliationDeletedSuccess}
+        cancelOrClose={() => setAvaliationDeletedSuccess(false)}
       />
     </>
   );

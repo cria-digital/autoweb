@@ -2,12 +2,12 @@ import styles from "./styles";
 import React, { useState, useEffect } from "react";
 import { View, ScrollView, BackHandler } from "react-native";
 import SimpleNav from "../../../../components/simpleNav";
-import StepsRegisterAvaliation from "../../registerAvaliation/steps";
 import Steps from "../../../../components/steps";
 import StepsRegisterPurchase from "../components/stepsRegisterPurchase";
 
-const RegisterPurchase = ({ navigation }: any) => {
+const RegisterPurchase = ({ navigation, route }: any) => {
   const { goBack } = navigation;
+  const isEditing = route.params?.isEditing ?? false;
   const [currentStep, setCurrentStep] = useState(0);
 
   const goBackSteps = () => {
@@ -35,7 +35,10 @@ const RegisterPurchase = ({ navigation }: any) => {
   return (
     <ScrollView style={styles.mainContainer}>
       <View style={styles.container}>
-        <SimpleNav label="Cadastrar compra" onPressBack={goBackSteps} />
+        <SimpleNav
+          label={isEditing ? "Editar compra" : "Cadastrar compra"}
+          onPressBack={goBackSteps}
+        />
 
         <Steps currentStep={currentStep} />
 

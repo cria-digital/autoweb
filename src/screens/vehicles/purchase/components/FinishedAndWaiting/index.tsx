@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { vehiclesAwaitingApprovalData } from "../../../../../../data";
 import CardPurchase from "../../../../../components/cardPurchase";
+import LoadMore from "../../../../../components/loadMore";
 
 interface FinishedAndAwaitingPurchaseTabProps {
   assessmentStatus: string;
@@ -59,7 +60,11 @@ const FinishedAndAwaitingPurchaseTab: React.FC<
           renderItem={renderFinishedRegistrations}
           style={styles.awaitingApprovalList}
           extraData={vehiclesAwaitingApprovalData}
+          contentContainerStyle={{ paddingBottom: "100%" }}
           maxToRenderPerBatch={5}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={() => <LoadMore />}
+          scrollEnabled
         />
       ) : (
         <FlatList
@@ -68,7 +73,11 @@ const FinishedAndAwaitingPurchaseTab: React.FC<
           renderItem={renderPendings}
           style={styles.awaitingApprovalList}
           extraData={vehiclesAwaitingApprovalData}
+          contentContainerStyle={{ paddingBottom: "100%" }}
           maxToRenderPerBatch={5}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={() => <LoadMore />}
+          scrollEnabled
         />
       )}
     </View>

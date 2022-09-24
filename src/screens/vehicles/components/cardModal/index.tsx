@@ -20,7 +20,7 @@ const CardModal: React.FC<CardModalProps> = (props) => {
     };
     return (
       <TouchableOpacity
-        key={`${label}${index}`}
+        key={index}
         onPress={() => onPressMenuItems(label)}
         activeOpacity={0.4}
       >
@@ -52,7 +52,7 @@ const CardModal: React.FC<CardModalProps> = (props) => {
           />
           <View>
             {labels.map((label, index) => (
-              <RenderMenuItems label={label} index={index} />
+              <RenderMenuItems key={index} label={label} index={index} />
             ))}
           </View>
         </View>
@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     backgroundColor: "white",
+    minWidth: 120,
     shadowColor: "rgba(0,0,0,0.1)",
     borderRadius: 8,
     elevation: 4,

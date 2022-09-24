@@ -4,7 +4,7 @@ import { IconButton } from "react-native-paper";
 import CheckboxComponent from "../../../../components/checkbox";
 import COLORS from "../../../../constants/colors";
 
-interface CardModalProps {
+interface CardModalCheckboxsProps {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   animationType: "slide" | "fade" | "none";
@@ -13,7 +13,7 @@ interface CardModalProps {
   labels: string[];
 }
 
-const CardModal: React.FC<CardModalProps> = (props) => {
+const CardModalCheckboxs: React.FC<CardModalCheckboxsProps> = (props) => {
   const {
     visible,
     setVisible,
@@ -97,4 +97,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CardModal;
+export default CardModalCheckboxs;

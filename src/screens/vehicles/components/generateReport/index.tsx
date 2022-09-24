@@ -26,7 +26,7 @@ const GenerateReport: React.FC<GenerateReportProps> = (props) => {
           <Text style={styles.title}>Selecione o tipo de relatório</Text>
 
           {radioValues.map((item, index) => (
-            <View style={[styles.mgv15]}>
+            <View style={[styles.mgv15]} key={index}>
               <RadioButtonComponent
                 label="Relatório de veículos"
                 status={

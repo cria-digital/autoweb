@@ -5,8 +5,9 @@ import { View, ScrollView, BackHandler } from "react-native";
 import SimpleNav from "../../../components/simpleNav";
 import StepsRegisterAvaliation from "./steps";
 
-const RegisterAvaliation = ({ navigation }: any) => {
+const RegisterAvaliation = ({ navigation, route }: any) => {
   const { goBack } = navigation;
+  const isEditing = route.params?.isEditing ?? false;
   const [currentStep, setCurrentStep] = useState(0);
 
   const goBackSteps = () => {
@@ -34,7 +35,10 @@ const RegisterAvaliation = ({ navigation }: any) => {
   return (
     <ScrollView style={styles.mainContainer}>
       <View style={styles.container}>
-        <SimpleNav label="Cadastrar avaliação" onPressBack={goBackSteps} />
+        <SimpleNav
+          label={!isEditing ? "Cadastrar avaliação" : "Editar avaliação"}
+          onPressBack={goBackSteps}
+        />
 
         <Steps currentStep={currentStep} />
 

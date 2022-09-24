@@ -37,7 +37,7 @@ const GeneralTabScreen: React.FC<GeneralProps> = (props) => {
   );
 
   return (
-    <View>
+    <View style={{ height: "100%" }}>
       <ButtonComponent
         mode="outlined"
         style={{ marginVertical: 24 }}
@@ -57,16 +57,23 @@ const GeneralTabScreen: React.FC<GeneralProps> = (props) => {
       <View style={{ marginBottom: 16 }} />
 
       <FilterButton label="Filtrar" />
+      <View style={{ marginBottom: 16 }} />
 
-      <FlatList
-        data={vehiclesGeneralData}
-        extraData={vehiclesGeneralData}
-        renderItem={RenderGeneralCards}
-        keyExtractor={(item, index) => `${item}${index}`}
-        scrollEnabled
-        maxToRenderPerBatch={10}
-        ListFooterComponent={() => <LoadMore />}
-      />
+      <View style={{ height: "auto", marginBottom: 16 }}>
+        <FlatList
+          data={vehiclesGeneralData}
+          extraData={vehiclesGeneralData}
+          renderItem={RenderGeneralCards}
+          keyExtractor={(item, index) => `${item}${index}`}
+          scrollEnabled
+          showsVerticalScrollIndicator={false}
+          maxToRenderPerBatch={10}
+          onEndReachedThreshold={0.5}
+          initialNumToRender={10}
+          contentContainerStyle={{ paddingBottom: "100%" }}
+          ListFooterComponent={() => <LoadMore />}
+        />
+      </View>
 
       <GenerateReport
         animationType="fade"

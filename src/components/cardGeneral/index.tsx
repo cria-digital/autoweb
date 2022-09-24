@@ -13,7 +13,8 @@ interface CardGeneralProps {
   onPressDots?: () => void;
   despachante?: string;
   vendido?: string;
-  status: string;
+  status?: string;
+  inventoryDays?: number;
 }
 
 const CardGeneral: React.FC<CardGeneralProps> = (props) => {
@@ -27,6 +28,7 @@ const CardGeneral: React.FC<CardGeneralProps> = (props) => {
     despachante,
     vendido,
     status,
+    inventoryDays,
   } = props;
 
   const getStatusColor = (status: any) => {
@@ -41,16 +43,18 @@ const CardGeneral: React.FC<CardGeneralProps> = (props) => {
         return "#FF7398";
       case StatusGeneral.VDD:
         return COLORS.green;
+      default:
+        return "#319ECD";
     }
   };
 
   return (
     <View style={styles.container}>
       <IconButton
-        icon="information"
+        icon={status ? "information" : "dots-vertical"}
         color={COLORS.black}
         size={20}
-        style={styles.dotsContainer}
+        style={[styles.dotsContainer, status && styles.opacity]}
         onPress={onPressDots}
         rippleColor={"rgb(240, 240, 240)"}
       />
@@ -66,14 +70,24 @@ const CardGeneral: React.FC<CardGeneralProps> = (props) => {
 
       <View style={styles.footerContainer}>
         <View style={{ width: "50%" }}>
-          <View style={styles.row}>
-            <Text style={styles.normalText}>Despachante:</Text>
-            <Text style={styles.strongText}> {despachante ?? "Sim"}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.normalText}>Vendido:</Text>
-            <Text style={styles.strongText}> {vendido ?? "Sim"}</Text>
-          </View>
+          {!inventoryDays && (
+            <>
+              <View style={styles.row}>
+                <Text style={styles.normalText}>Despachante:</Text>
+                <Text style={styles.strongText}> {despachante ?? "Sim"}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.normalText}>Vendido:</Text>
+                <Text style={styles.strongText}> {vendido ?? "Sim"}</Text>
+              </View>
+            </>
+          )}
+          {inventoryDays && (
+            <View>
+              <Text style={styles.strongText}>{"Dias em estoque"}</Text>
+              <Text style={styles.signature}>{`${inventoryDays} dias`}</Text>
+            </View>
+          )}
         </View>
 
         <View style={{ width: "50%" }}>
@@ -85,7 +99,7 @@ const CardGeneral: React.FC<CardGeneralProps> = (props) => {
                 { backgroundColor: getStatusColor(status) },
               ]}
             >
-              {status}
+              {status ?? "Disponível para venda"}
             </Text>
           </View>
         </View>
@@ -170,13 +184,14 @@ const styles = StyleSheet.create({
     margin: 0,
     marginRight: 0,
     marginTop: 20,
+  },
+  opacity: {
     opacity: 0.4,
   },
   signature: {
     fontFamily: "RalewaySemiBold",
     fontSize: 12,
     color: COLORS.primary,
-    textDecorationLine: "underline",
   },
   statusText: {
     fontFamily: "RalewaySemiBold",

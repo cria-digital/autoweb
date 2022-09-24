@@ -1,5 +1,11 @@
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+} from "react-native";
 import { RadioButton } from "react-native-paper";
 import COLORS from "../../constants/colors";
 
@@ -9,13 +15,14 @@ interface RadioButtonComponentProps {
   color?: string;
   disabled?: boolean;
   label: string;
+  style?: StyleProp<ViewStyle>;
 }
 
 const RadioButtonComponent: React.FC<RadioButtonComponentProps> = (props) => {
-  const { status, onPress, color, disabled, label } = props;
+  const { status, onPress, color, disabled, label, style } = props;
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={style ?? styles.container}
       onPress={onPress}
       activeOpacity={0.5}
     >

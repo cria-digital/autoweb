@@ -6,7 +6,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   radioButtons: {
-    marginVertical: 28,
+    marginTop: 16,
+    marginBottom: 16,
   },
 });
 

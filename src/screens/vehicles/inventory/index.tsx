@@ -37,7 +37,9 @@ const InventoryTabScreen: React.FC<InventoryTabScreenProps> = (props) => {
         });
         break;
       case "Editar":
-        alert("Trabalhando na edição");
+        navigate("RegisterPurchase", {
+          isEditing: true,
+        });
         break;
       case "Liberar Venda":
         setCardOptionsVisible(false);
@@ -54,44 +56,48 @@ const InventoryTabScreen: React.FC<InventoryTabScreenProps> = (props) => {
     }
   };
   return (
-    <ScrollView>
-      <DoubleButtonsComponent
-        labelLeft="Gerar relatório"
-        labelRight="Cadastrar compra"
-        onPressLeft={() => setGenerateReportModal(true)}
-        onPressRight={() => navigate("RegisterPurchase")}
-      />
-
-      <View style={styles.inputView}>
-        <InputComponent
-          mode="flat"
-          right={RightInputIcon(
-            () => (
-              <MagnifyIcon color={"#000000"} />
-            ),
-            () => navigate("FilterVehicles")
-          )}
+    <View style={{ height: "100%" }}>
+      <View style={{ height: "auto" }}>
+        <DoubleButtonsComponent
+          labelLeft="Gerar relatório"
+          labelRight="Cadastrar compra"
+          onPressLeft={() => setGenerateReportModal(true)}
+          onPressRight={() => navigate("RegisterPurchase")}
         />
+
+        <View style={styles.inputView}>
+          <InputComponent
+            mode="flat"
+            right={RightInputIcon(
+              () => (
+                <MagnifyIcon color={"#000000"} />
+              ),
+              () => navigate("FilterVehicles")
+            )}
+          />
+        </View>
+
+        <FilterButton label="Filtrar" />
+
+        <View style={styles.radioButtons}>
+          <RadioPagination
+            assessmentStatus={registrationPage}
+            setAssessmentStatus={setRegistrationPage}
+            firstStatus="Finished"
+            secondStatus="Waiting"
+            firstLabel="Cadastros concluídos"
+            secondLabel="Cadastros pendentes"
+          />
+        </View>
       </View>
 
-      <FilterButton label="Filtrar" />
-
-      <View style={styles.radioButtons}>
-        <RadioPagination
+      <View style={{ height: "auto", marginBottom: 32 }}>
+        <FinishedAndAwaitingPurchaseTab
           assessmentStatus={registrationPage}
-          setAssessmentStatus={setRegistrationPage}
-          firstStatus="Finished"
-          secondStatus="Waiting"
-          firstLabel="Cadastros concluídos"
-          secondLabel="Cadastros pendentes"
+          setCardId={setCardID}
+          setCardOptionsVisible={setCardOptionsVisible}
         />
       </View>
-
-      <FinishedAndAwaitingPurchaseTab
-        assessmentStatus={registrationPage}
-        setCardId={setCardID}
-        setCardOptionsVisible={setCardOptionsVisible}
-      />
       <LoadMore />
       <GenerateReport
         animationType="fade"
@@ -122,7 +128,7 @@ const InventoryTabScreen: React.FC<InventoryTabScreenProps> = (props) => {
         cancelModal={cancelPurchaseSuccessModal}
         setCancelModal={setCancelPurchaseSuccessModal}
       />
-    </ScrollView>
+    </View>
   );
 };
 
