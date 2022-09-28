@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import BottomNavigation from "./bottomNavigation";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -11,10 +11,30 @@ import ContractsPurchase from "../screens/vehicles/purchase/contracts";
 import AddProposal from "../screens/vehicles/sell/addProposal";
 import RealizedSell from "../screens/vehicles/sell/realizedSell";
 import ViewSellScreen from "../screens/vehicles/sell/viewSell";
+import { useRecoilState } from "recoil";
+import AuthStatus from "../atoms/auth";
+import { generateTokenApi } from "../config/axiosConfig";
 
 const Navigation = () => {
+  const [{ tokenApi, tokenExpire }, setAuthStatus] = useRecoilState(AuthStatus);
   const Stack = createNativeStackNavigator();
   const notHeader = { headerShown: false };
+
+  useEffect(() => {
+    const momentHour = new Date().toLocaleTimeString();
+
+    async function GetApiAccessToken() {
+      const resultDataGenerateTokenApi = await generateTokenApi();
+      setAuthStatus((old) => ({
+        ...old,
+        tokenApi: resultDataGenerateTokenApi.Requisicao.Retorno.TokenAcesso,
+        tokenExpire:
+          resultDataGenerateTokenApi.Requisicao.Retorno.HorarioExpiracao,
+      }));
+    }
+    if (!tokenApi || momentHour >= tokenExpire) GetApiAccessToken();
+  }, [tokenApi, tokenExpire]);
+
   return (
     <NavigationContainer>
       <Stack.Navigator>

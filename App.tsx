@@ -6,11 +6,7 @@ import { StatusBar } from "expo-status-bar";
 import useLocalFonts from "./src/hooks/useLocalFonts";
 import { useCallback } from "react";
 import * as SplashScreen from "expo-splash-screen";
-import {
-  configureFonts,
-  DefaultTheme,
-  Provider as PaperProvider,
-} from "react-native-paper";
+import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 
 const App = () => {
   const { fontsLoaded } = useLocalFonts();

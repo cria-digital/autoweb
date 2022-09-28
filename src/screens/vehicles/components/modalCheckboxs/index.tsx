@@ -25,7 +25,7 @@ const CardModalCheckboxs: React.FC<CardModalCheckboxsProps> = (props) => {
   const RenderMenuItems = ({ label, index }: any) => {
     return (
       <TouchableOpacity
-        key={`${label}${index}`}
+        key={`${label}-${index}`}
         onPress={() => onPressMenuItems(index)}
         activeOpacity={0.4}
       >
@@ -63,7 +63,7 @@ const CardModalCheckboxs: React.FC<CardModalCheckboxsProps> = (props) => {
           />
           <View style={{ alignItems: "flex-end" }}>
             {labels.map((label, index) => (
-              <RenderMenuItems label={label} index={index} />
+              <RenderMenuItems key={index} label={label} index={index} />
             ))}
           </View>
         </View>
