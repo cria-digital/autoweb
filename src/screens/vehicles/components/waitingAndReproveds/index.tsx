@@ -1,32 +1,37 @@
 import React from "react";
+import { memo } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
-import { vehiclesAwaitingApprovalData } from "../../../../../data";
+import { Avaliations } from "../../../../../types";
 import Card from "../../../../components/card";
 import LoadMore from "../../../../components/loadMore";
+import { ApiBaseUrl } from "../../../../config/compra";
+import { baseUrlImages } from "../../../../constants/baseUrls";
 
 interface WaitingAndApprovedsProps {
   assessmentStatus: string;
   setCardOptionsVisible: (status: boolean) => void;
-  setCardId: (id: number) => void;
+  setCardId: (id: string) => void;
+  data: Avaliations[];
 }
 
 const WaitingAndApproveds: React.FC<WaitingAndApprovedsProps> = (props) => {
-  const { assessmentStatus, setCardOptionsVisible, setCardId } = props;
+  const { assessmentStatus, setCardOptionsVisible, setCardId, data } = props;
   const renderAwaitingApproval = ({ item, index }: any) => (
     <Card
-      assessorName={item.assessorName}
-      carValue={item.carValue}
-      carYear={item.carYear}
-      evaluationDate={item.evaluationDate}
-      licensePlate={item.licensePlate}
-      vehicleImage={item.vehicleImage[0]}
-      vehicleName={item.vehicleName}
+      assessorName={item.Avaliador}
+      carValue={item.ValorAvaliacao}
+      carYear={item.AnoModelo}
+      evaluationDate={item.DataAvaliacao}
+      licensePlate={item.Placa}
+      vehicleImage={`${baseUrlImages}/${item.Imagem}`}
+      vehicleName={`${item.Marca} ${item.Modelo}`}
       onPressDots={() => {
         setCardOptionsVisible(true);
-        setCardId(item.id);
+        setCardId(item.idAvaliacao);
       }}
     />
   );
+
   const renderReproveds = ({ item, index }: any) => (
     <Card
       assessorName={item.assessorName}
@@ -34,7 +39,7 @@ const WaitingAndApproveds: React.FC<WaitingAndApprovedsProps> = (props) => {
       carYear={item.carYear}
       evaluationDate={item.evaluationDate}
       licensePlate={item.licensePlate}
-      vehicleImage={item.vehicleImage[0]}
+      vehicleImage={`${item.vehicleImage[0]}`}
       vehicleName={item.vehicleName}
       onPressDots={() => {
         setCardOptionsVisible(true);
@@ -50,23 +55,25 @@ const WaitingAndApproveds: React.FC<WaitingAndApprovedsProps> = (props) => {
     <View>
       {assessmentStatus === "Waiting" ? (
         <FlatList
-          data={vehiclesAwaitingApprovalData}
+          data={data}
           keyExtractor={(item, index) => `${item}${index}`}
           renderItem={renderAwaitingApproval}
           style={styles.awaitingApprovalList}
-          extraData={vehiclesAwaitingApprovalData}
+          extraData={data}
           contentContainerStyle={styles.containerStyle}
-          maxToRenderPerBatch={5}
+          initialNumToRender={1}
+          onEndReachedThreshold={0.5}
+          maxToRenderPerBatch={1}
           ListFooterComponent={() => <LoadMore />}
           scrollEnabled
         />
       ) : (
         <FlatList
-          data={vehiclesAwaitingApprovalData}
+          data={data}
           keyExtractor={(item, index) => `${item}${index}`}
           renderItem={renderReproveds}
           style={styles.awaitingApprovalList}
-          extraData={vehiclesAwaitingApprovalData}
+          extraData={data}
           contentContainerStyle={styles.containerStyle}
           maxToRenderPerBatch={5}
           ListFooterComponent={() => <LoadMore />}
@@ -88,4 +95,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WaitingAndApproveds;
+export default memo(WaitingAndApproveds);

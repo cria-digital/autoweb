@@ -1,15 +1,23 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { useCallback } from "react";
+import { useEffect } from "react";
+import { memo } from "react";
+import { View, StyleSheet } from "react-native";
 import { Provider } from "react-native-paper";
+import { useRecoilValue } from "recoil";
+import AuthStatus from "../../../../atoms/auth";
 import AlertModal from "../../../../components/alertModal";
 import DoubleButtonsComponent from "../../../../components/doubleButtons";
 import FilterButton from "../../../../components/filterButton";
 import InputComponent from "../../../../components/input";
-import LoadMore from "../../../../components/loadMore";
 import ModalApprovedOrReproved from "../../../../components/modalApproveOrReprove";
 import RadioPagination from "../../../../components/radioPagination";
 import SimpleModal from "../../../../components/simpleModal";
-import COLORS from "../../../../constants/colors";
+import {
+  approveAvaliation,
+  consultAvaliations,
+  deleteAvaliation,
+} from "../../../../config/avaliacao";
 import MagnifyIcon from "../../../../icons/magnify";
 import RightInputIcon from "../../../../icons/rightInputIcon";
 import AlertModalsForVehiclePage from "../alertModals";
@@ -24,6 +32,7 @@ interface VehiclesPageProps {
 }
 
 const VehiclesPage: React.FC<VehiclesPageProps> = (props) => {
+  const { tokenApi } = useRecoilValue(AuthStatus);
   const { assessmentStatus, setAssessmentStatus, navigate } = props;
   const [cardOptionsVisible, setCardOptionsVisible] = useState(false);
   const [generateReportModal, setGenerateReportModal] = useState(false);
@@ -40,12 +49,46 @@ const VehiclesPage: React.FC<VehiclesPageProps> = (props) => {
   const [avaliationSuccess, setAvaliationSuccess] = useState(false);
   const [motiveSended, setMotiveSended] = useState(false);
 
-  const [cardId, setCardId] = useState<number | null>(null);
+  const [cardId, setCardId] = useState<string>("");
 
   const LabelsOptionsName = () => {
     if (assessmentStatus === "Waiting")
       return ["Visualizar", "Editar", "Aprovar/Reprovar", "Excluir"];
     else return ["Visualizar", "Editar", "Aprovar", "Excluir"];
+  };
+
+  const [avaliationsData, setAvaliationsData] = useState([]);
+
+  const getAvaliations = async () => {
+    setAvaliationsData([]);
+    if (tokenApi) {
+      const result = await consultAvaliations(tokenApi);
+      if (result) setAvaliationsData(result?.Avaliacoes);
+    }
+  };
+
+  useEffect(() => {
+    getAvaliations();
+  }, [tokenApi]);
+
+  const deleteAvaliationByID = async (id: string) => {
+    if (tokenApi) {
+      await deleteAvaliation(id, tokenApi).then(async () => {
+        setDeleteAvaliationModal(false);
+        setAvaliationDeletedSuccess(true);
+        await getAvaliations();
+      });
+    }
+  };
+
+  const handleApproveAvaliation = async () => {
+    if (tokenApi) {
+      await approveAvaliation(cardId, tokenApi).then(async () => {
+        setApprovalOrReprovalModal(false);
+        setApprovedModal(true);
+        await getAvaliations();
+      });
+    }
   };
 
   const switchOptionsMenu = (item: any) => {
@@ -56,7 +99,10 @@ const VehiclesPage: React.FC<VehiclesPageProps> = (props) => {
         });
         break;
       case "Editar":
-        navigate("RegisterAvaliation");
+        navigate("RegisterAvaliation", {
+          isEditing: true,
+          id: cardId,
+        });
         break;
       case "Aprovar":
         setCardOptionsVisible(false);
@@ -114,6 +160,7 @@ const VehiclesPage: React.FC<VehiclesPageProps> = (props) => {
 
         <View style={{ height: "auto" }}>
           <WaitingAndApproveds
+            data={avaliationsData}
             assessmentStatus={assessmentStatus}
             setCardOptionsVisible={setCardOptionsVisible}
             setCardId={setCardId}
@@ -141,6 +188,8 @@ const VehiclesPage: React.FC<VehiclesPageProps> = (props) => {
           setApprovalSuccessModal={setApprovalSuccessModal}
           setAvaliationDeletedSuccess={setAvaliationDeletedSuccess}
           avaliationDeletedSuccess={avaliationDeletedSuccess}
+          deleteAvaliation={deleteAvaliationByID}
+          cardID={cardId}
         />
         <AlertModal
           animationType="fade"
@@ -156,10 +205,7 @@ const VehiclesPage: React.FC<VehiclesPageProps> = (props) => {
           secondStrongText="reprovar"
           afterSecondStrongText="a avaliação?"
           closeIcon
-          firstButtonPress={() => {
-            setApprovalOrReprovalModal(false);
-            setApprovedModal(true);
-          }}
+          firstButtonPress={handleApproveAvaliation}
           secondButtonPress={() => {
             setApprovalOrReprovalModal(false);
             setReprovedModal(true);
@@ -233,4 +279,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default VehiclesPage;
+export default memo(VehiclesPage);

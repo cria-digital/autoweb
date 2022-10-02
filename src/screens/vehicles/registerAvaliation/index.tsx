@@ -8,6 +8,7 @@ import StepsRegisterAvaliation from "./steps";
 const RegisterAvaliation = ({ navigation, route }: any) => {
   const { goBack } = navigation;
   const isEditing = route.params?.isEditing ?? false;
+  const id = route.params?.id ?? "";
   const [currentStep, setCurrentStep] = useState(0);
 
   const goBackSteps = () => {
@@ -43,6 +44,8 @@ const RegisterAvaliation = ({ navigation, route }: any) => {
         <Steps currentStep={currentStep} />
 
         <StepsRegisterAvaliation
+          id={id}
+          isEditing={isEditing}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
         />

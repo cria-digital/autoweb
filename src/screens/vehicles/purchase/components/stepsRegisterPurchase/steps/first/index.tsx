@@ -1,15 +1,25 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
+import { useRecoilValue } from "recoil";
 import { StepsRegisterAvaliationProps } from "..";
+import AuthStatus from "../../../../../../../atoms/auth";
 import ButtonComponent from "../../../../../../../components/button";
 import DoubleDropdown from "../../../../../../../components/doubleDropdown";
 import Dropdown from "../../../../../../../components/dropdown";
+import DropdownMarca from "../../../../../../../components/dropdownMarca";
+import DropdownModelo from "../../../../../../../components/dropdownModelo";
+import DropdownVersao from "../../../../../../../components/dropdownVersao";
 import InputComponent from "../../../../../../../components/input";
 import InputLayout from "../../../../../../../components/inputLayout";
 import NextBackButtons from "../../../../../../../components/nextBackButtons";
 import RadioOptions from "../../../../../../../components/radioOptions";
 import StepsTitle from "../../../../../../../components/stepsTitle";
+import {
+  consultBrands,
+  consultModels,
+  consultVersion,
+} from "../../../../../../../config/general";
 
 const FirstStepRegisterPurchase: React.FC<StepsRegisterAvaliationProps> = (
   props
@@ -43,6 +53,42 @@ const FirstStepRegisterPurchase: React.FC<StepsRegisterAvaliationProps> = (
       setCurrentStep(currentStep + 1);
     }
   };
+  const { tokenApi } = useRecoilValue(AuthStatus);
+  const [brands, setBrands] = useState([]);
+  const [models, setModels] = useState([]);
+  const [versions, setVersions] = useState([]);
+
+  const [brandString, setBrandString] = useState("");
+  const [modelString, setModelString] = useState("");
+  const [versionString, setVersionString] = useState("");
+
+  async function getAllBrands() {
+    const result = await consultBrands(tokenApi);
+    setBrands(result?.Marcas);
+  }
+  async function getAllModels() {
+    if (!values.marca) return alert("Selecione uma marca");
+    const result = await consultModels(values.marca, tokenApi);
+    setModels(result?.Modelos);
+  }
+  async function getAllVersions() {
+    if (!values.modelo) return alert("Selecione um modelo");
+    const result = await consultVersion(values.modelo, tokenApi);
+    setVersions(result?.Versoes);
+  }
+
+  useEffect(() => {
+    getAllBrands();
+  }, []);
+
+  useEffect(() => {
+    if (values.marca) getAllModels();
+  }, [values.marca]);
+
+  useEffect(() => {
+    if (values.modelo) getAllVersions();
+  }, [values.modelo]);
+
   return (
     <View>
       <View style={{ marginTop: 30, marginBottom: 30 }}>
@@ -93,27 +139,36 @@ const FirstStepRegisterPurchase: React.FC<StepsRegisterAvaliationProps> = (
         rightHasInput
       />
 
-      <View style={{ marginTop: 25 }} />
-      <Dropdown
-        title="Marca"
-        value={values.marca}
-        placeholder="Selecione a marca"
-        content={["marca 1", "marca 2", "marca 3"]}
-        onPressMenuItem={(value) => setFieldValue("marca", value)}
-      />
+      <InputLayout style={{ marginTop: 25 }}>
+        <DropdownMarca
+          title="Marca"
+          required
+          content={brands}
+          value={brandString}
+          placeholder={"Selecione a marca"}
+          onPressMenuItem={(item) => {
+            setBrandString(item?.Marca);
+            setFieldValue("marca", item?.idMarca);
+          }}
+        />
+      </InputLayout>
 
-      <View style={{ marginTop: 25 }} />
-      <Dropdown
-        title="Modelo"
-        required
-        value={values.modelo}
-        errorMessage={errors.modelo}
-        touched={touched.modelo}
-        errors={errors.modelo}
-        placeholder="Selecione o modelo"
-        content={["modelo 1", "modelo 2", "modelo 3"]}
-        onPressMenuItem={(value) => setFieldValue("modelo", value)}
-      />
+      <InputLayout style={{ marginTop: 25 }}>
+        <DropdownModelo
+          title="Modelo"
+          required
+          content={models}
+          value={modelString}
+          errorMessage={errors.modelo}
+          touched={touched.modelo}
+          errors={errors.modelo}
+          placeholder={"Selecione o modelo"}
+          onPressMenuItem={(item) => {
+            setModelString(item?.Modelo);
+            setFieldValue("modelo", item?.idModelo);
+          }}
+        />
+      </InputLayout>
 
       <DoubleDropdown
         onPressLeftMenuItem={(item) => setFieldValue("ano", item)}
@@ -137,18 +192,22 @@ const FirstStepRegisterPurchase: React.FC<StepsRegisterAvaliationProps> = (
         style={{ marginTop: 25 }}
       />
 
-      <View style={{ marginTop: 25 }} />
-      <Dropdown
-        required
-        title="Versao"
-        value={values.versao}
-        errorMessage={errors.versao}
-        touched={touched.versao}
-        errors={errors.versao}
-        placeholder="Selecione a versão"
-        content={["versao 1", "versao 2", "versao 3"]}
-        onPressMenuItem={(value) => setFieldValue("versao", value)}
-      />
+      <InputLayout style={{ marginTop: 25 }}>
+        <DropdownVersao
+          title="Versão"
+          required
+          content={versions}
+          value={versionString}
+          errorMessage={errors.versao}
+          touched={touched.versao}
+          errors={errors.versao}
+          placeholder={"Selecione a versão"}
+          onPressMenuItem={(item) => {
+            setVersionString(item?.Versao);
+            setFieldValue("versao", item?.idVersao);
+          }}
+        />
+      </InputLayout>
 
       <DoubleDropdown
         onPressLeftMenuItem={(item) => setFieldValue("cambio", item)}

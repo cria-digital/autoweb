@@ -2,12 +2,12 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   inputView: {
-    marginTop: 24,
-    marginBottom: 16,
+    marginTop: 16,
+    marginBottom: 10,
   },
   radioButtons: {
-    marginTop: 16,
-    marginBottom: 16,
+    marginTop: 12,
+    marginBottom: 12,
   },
 });
 

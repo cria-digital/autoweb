@@ -10,6 +10,7 @@ interface AlertModalsForPurchasePage {
   setPurchaseSuccessModal: (purchase: boolean) => void;
   cancelModal: boolean;
   setCancelModal: (cancel: boolean) => void;
+  handleCancelPurchase: () => Promise<void>;
 }
 
 const AlertModalsForPurchase: React.FC<AlertModalsForPurchasePage> = (
@@ -24,6 +25,7 @@ const AlertModalsForPurchase: React.FC<AlertModalsForPurchasePage> = (
     setPurchaseSuccessModal,
     cancelModal,
     setCancelModal,
+    handleCancelPurchase,
   } = props;
 
   return (
@@ -57,11 +59,7 @@ const AlertModalsForPurchase: React.FC<AlertModalsForPurchasePage> = (
         secondStrongText="compra"
         afterSecondStrongText="desse veículo?"
         warningMessage
-        cancelOrClose={() => {
-          setCancelPurchase(false);
-          setPurchaseSuccessModal(false);
-          setCancelModal(true);
-        }}
+        cancelOrClose={async () => await handleCancelPurchase()}
       />
       <AlertModal
         animationType="fade"

@@ -10,6 +10,8 @@ interface AlertModalForVehiclePage {
   setApprovalSuccessModal: (visible: boolean) => void;
   avaliationDeletedSuccess: boolean;
   setAvaliationDeletedSuccess: (visible: boolean) => void;
+  deleteAvaliation: (id: string) => Promise<void>;
+  cardID: string;
 }
 
 const AlertModalsForVehiclePage: React.FC<AlertModalForVehiclePage> = (
@@ -24,6 +26,8 @@ const AlertModalsForVehiclePage: React.FC<AlertModalForVehiclePage> = (
     setApprovalSuccessModal,
     avaliationDeletedSuccess,
     setAvaliationDeletedSuccess,
+    deleteAvaliation,
+    cardID,
   } = props;
 
   return (
@@ -40,10 +44,7 @@ const AlertModalsForVehiclePage: React.FC<AlertModalForVehiclePage> = (
         secondStrongText="avaliação"
         afterSecondStrongText="desse veículo?"
         deleteMessage
-        cancelOrClose={() => {
-          setDeleteAvaliationVisible(false);
-          setAvaliationDeletedSuccess(true);
-        }}
+        cancelOrClose={async () => deleteAvaliation(cardID)}
       />
       <AlertModal
         animationType="fade"

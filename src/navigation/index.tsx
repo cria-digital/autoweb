@@ -19,10 +19,10 @@ const Navigation = () => {
   const [{ tokenApi, tokenExpire }, setAuthStatus] = useRecoilState(AuthStatus);
   const Stack = createNativeStackNavigator();
   const notHeader = { headerShown: false };
+  const momentHour = new Date().toLocaleTimeString();
+  const tokenExpired = tokenExpire < momentHour;
 
   useEffect(() => {
-    const momentHour = new Date().toLocaleTimeString();
-
     async function GetApiAccessToken() {
       const resultDataGenerateTokenApi = await generateTokenApi();
       setAuthStatus((old) => ({
@@ -32,8 +32,8 @@ const Navigation = () => {
           resultDataGenerateTokenApi.Requisicao.Retorno.HorarioExpiracao,
       }));
     }
-    if (!tokenApi || momentHour >= tokenExpire) GetApiAccessToken();
-  }, [tokenApi, tokenExpire]);
+    if (!tokenApi || tokenExpired) GetApiAccessToken();
+  }, [tokenExpire < momentHour]);
 
   return (
     <NavigationContainer>

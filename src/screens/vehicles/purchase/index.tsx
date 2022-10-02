@@ -1,10 +1,17 @@
+import { useIsFocused } from "@react-navigation/native";
 import React, { useState } from "react";
-import { View, ScrollView } from "react-native";
+import { useEffect } from "react";
+import { View } from "react-native";
+import { useRecoilValue } from "recoil";
+import AuthStatus from "../../../atoms/auth";
 import DoubleButtonsComponent from "../../../components/doubleButtons";
 import FilterButton from "../../../components/filterButton";
 import InputComponent from "../../../components/input";
-import LoadMore from "../../../components/loadMore";
 import RadioPagination from "../../../components/radioPagination";
+import {
+  cancelPurchaseVehicle,
+  consultPurchases,
+} from "../../../config/compra";
 import MagnifyIcon from "../../../icons/magnify";
 import RightInputIcon from "../../../icons/rightInputIcon";
 import CardModal from "../components/cardModal";
@@ -20,7 +27,8 @@ interface PurchaseTabScreenProps {
 const PurchaseTabScreen: React.FC<PurchaseTabScreenProps> = (props) => {
   const { navigation } = props;
   const { navigate } = navigation;
-  const [cardID, setCardID] = useState<number | null>(null);
+  const { tokenApi } = useRecoilValue(AuthStatus);
+  const [cardID, setCardID] = useState<string>("");
   const [cardOptionsVisible, setCardOptionsVisible] = useState(false);
   const [registrationPage, setRegistrationPage] = useState("Finished");
   const [generateReportModal, setGenerateReportModal] = useState(false);
@@ -28,6 +36,32 @@ const PurchaseTabScreen: React.FC<PurchaseTabScreenProps> = (props) => {
   const [purchaseSuccessModal, setCancelPurchaseSuccessModal] = useState(false);
   const [cancelPurchase, setCancelPurchase] = useState(false);
   const [cancelPurchaseSuccessModal, setPurchaseSuccessModal] = useState(false);
+  const isFocused = useIsFocused();
+  const [purchaseList, setPurchaseList] = useState([]);
+
+  async function handleGetPurchasesByEnterprise() {
+    if (tokenApi) {
+      await consultPurchases(tokenApi).then((result) =>
+        setPurchaseList(result?.Compras)
+      );
+    }
+  }
+
+  useEffect(() => {
+    if (isFocused) handleGetPurchasesByEnterprise();
+  }, []);
+
+  const handleCancelPurchase = async () => {
+    if (tokenApi) {
+      await cancelPurchaseVehicle(cardID, tokenApi).then(async () => {
+        setCancelPurchase(false);
+        setPurchaseSuccessModal(false);
+        setCancelPurchaseSuccessModal(true);
+
+        await handleGetPurchasesByEnterprise();
+      });
+    }
+  };
 
   const switchOptionsMenu = (item: any) => {
     switch (item) {
@@ -93,6 +127,7 @@ const PurchaseTabScreen: React.FC<PurchaseTabScreenProps> = (props) => {
 
       <View style={{ height: "auto" }}>
         <FinishedAndAwaitingPurchaseTab
+          data={purchaseList}
           assessmentStatus={registrationPage}
           setCardId={setCardID}
           setCardOptionsVisible={setCardOptionsVisible}
@@ -127,6 +162,7 @@ const PurchaseTabScreen: React.FC<PurchaseTabScreenProps> = (props) => {
         setPurchaseSuccessModal={setPurchaseSuccessModal}
         cancelModal={cancelPurchaseSuccessModal}
         setCancelModal={setCancelPurchaseSuccessModal}
+        handleCancelPurchase={async () => await handleCancelPurchase()}
       />
     </View>
   );

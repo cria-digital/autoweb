@@ -1,33 +1,36 @@
 import React, { memo } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { vehiclesAwaitingApprovalData } from "../../../../../../data";
+import { Purchase } from "../../../../../../types";
 import CardPurchase from "../../../../../components/cardPurchase";
 import LoadMore from "../../../../../components/loadMore";
+import { baseUrlImages } from "../../../../../constants/baseUrls";
 
 interface FinishedAndAwaitingPurchaseTabProps {
   assessmentStatus: string;
   setCardOptionsVisible: (status: boolean) => void;
-  setCardId: (id: number) => void;
+  setCardId: (id: string) => void;
+  data: Purchase[];
 }
 
 const FinishedAndAwaitingPurchaseTab: React.FC<
   FinishedAndAwaitingPurchaseTabProps
 > = (props) => {
-  const { assessmentStatus, setCardOptionsVisible, setCardId } = props;
+  const { assessmentStatus, setCardOptionsVisible, setCardId, data } = props;
   const renderFinishedRegistrations = ({ item, index }: any) => (
     <CardPurchase
-      assessorName={item.assessorName}
-      code={item.code}
-      carYear={item.carYear}
-      evaluationDate={item.evaluationDate}
-      licensePlate={item.licensePlate}
-      vehicleImage={item.vehicleImage[0]}
-      vehicleName={item.vehicleName}
+      assessorName={item.Avaliador}
+      code={item.IdVeiculo}
+      carYear={item.AnoModelo}
+      evaluationDate={item.DataCadastro}
+      licensePlate={item.Placa}
+      vehicleImage={`${baseUrlImages}/${item.Imagem}`}
+      vehicleName={`${item.Marca} ${item.Modelo}`}
       cardType="finished"
-      onPressSignature={() => alert("Assinatura " + item.signature)}
+      onPressSignature={() => alert("Assinatura " + item.Avaliador)}
       onPressDots={() => {
+        setCardId(item.IdVeiculo);
         setCardOptionsVisible(true);
-        setCardId(item.id);
       }}
     />
   );
@@ -42,8 +45,8 @@ const FinishedAndAwaitingPurchaseTab: React.FC<
       vehicleName={item.vehicleName}
       carValue={item.carValue}
       onPressDots={() => {
-        setCardOptionsVisible(true);
         setCardId(item.id);
+        setCardOptionsVisible(true);
       }}
       cardType="waiting"
       reprovedMotive={
@@ -55,13 +58,14 @@ const FinishedAndAwaitingPurchaseTab: React.FC<
     <View>
       {assessmentStatus === "Finished" ? (
         <FlatList
-          data={vehiclesAwaitingApprovalData}
+          data={data}
           keyExtractor={(item, index) => `${item}${index}`}
           renderItem={renderFinishedRegistrations}
           style={styles.awaitingApprovalList}
-          extraData={vehiclesAwaitingApprovalData}
+          extraData={data}
           contentContainerStyle={{ paddingBottom: "100%" }}
           maxToRenderPerBatch={5}
+          initialNumToRender={10}
           onEndReachedThreshold={0.5}
           ListFooterComponent={() => <LoadMore />}
           scrollEnabled
