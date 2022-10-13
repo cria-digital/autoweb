@@ -11,8 +11,8 @@ interface ChecklistProps {
   onPressSecondOption: (text: string) => void;
   onPressThirdOption: (text: string) => void;
   inputCustoAproximado: string;
-  inputCustoAproximadoError: any;
-  inputCustoAproximadoTouched: any;
+  inputCustoAproximadoError?: any;
+  inputCustoAproximadoTouched?: any;
   inputCustoAproximadoOnChange: (text: string) => void;
   inputObservationValue: string;
   inputObservationPlaceholder: string;

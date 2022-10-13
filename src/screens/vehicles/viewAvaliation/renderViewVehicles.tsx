@@ -13,13 +13,13 @@ interface RenderViewVehiclesProps {
   combustivel: string;
   cor: string;
   empresa: string;
-  filial: string;
+  km: string;
   marca: string;
   modelo: string;
   numeroPartidas: string;
   numeroPortas: string;
   placa: string;
-  renavan: string;
+  renavam: string;
   tipoVeiculo: string;
   versao: string;
 }
@@ -35,13 +35,13 @@ const RenderViewVehicles: React.FC<RenderViewVehiclesProps> = (props) => {
     combustivel,
     cor,
     empresa,
-    filial,
+    km,
     marca,
     modelo,
     numeroPartidas,
     numeroPortas,
     placa,
-    renavan,
+    renavam,
     tipoVeiculo,
     versao,
   } = props;
@@ -58,13 +58,13 @@ const RenderViewVehicles: React.FC<RenderViewVehiclesProps> = (props) => {
         combustivel={combustivel}
         cor={cor}
         empresa={empresa}
-        filial={filial}
+        Km={km}
         marca={marca}
         modelo={modelo}
         numeroPartidas={numeroPartidas}
         numeroPortas={numeroPortas}
         placa={placa}
-        renavan={renavan}
+        renavam={renavam}
         tipoVeiculo={tipoVeiculo}
         versao={versao}
       />

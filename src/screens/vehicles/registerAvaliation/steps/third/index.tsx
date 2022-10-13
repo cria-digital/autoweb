@@ -11,27 +11,13 @@ const ThirdStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
   const {
     currentStep,
     setCurrentStep,
-    handleSubmit,
     setFieldValue,
     values,
     touched,
     errors,
     cancelRegister,
   } = props;
-  const nextStep = () => {
-    if (
-      !values.mecanica.custoAproximado ||
-      !values.eletrica.custoAproximado ||
-      !values.tapecaria.custoAproximado ||
-      !values.pneus.custoAproximado ||
-      !values.funilaria.custoAproximado ||
-      !values.martelinho.custoAproximado
-    ) {
-      handleSubmit(values);
-    } else {
-      setCurrentStep(currentStep + 1);
-    }
-  };
+  const nextStep = () => setCurrentStep(currentStep + 1);
 
   return (
     <View>
@@ -46,8 +32,6 @@ const ThirdStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
         onPressSecondOption={(text) => setFieldValue("mecanica.status", text)}
         onPressThirdOption={(text) => setFieldValue("mecanica.status", text)}
         inputCustoAproximado={values.mecanica.custoAproximado}
-        inputCustoAproximadoError={errors?.mecanica?.custoAproximado}
-        inputCustoAproximadoTouched={touched?.mecanica?.custoAproximado}
         inputCustoAproximadoOnChange={(text: string) =>
           setFieldValue("mecanica.custoAproximado", text)
         }
@@ -65,8 +49,6 @@ const ThirdStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
         onPressSecondOption={(text) => setFieldValue("eletrica.status", text)}
         onPressThirdOption={(text) => setFieldValue("eletrica.status", text)}
         inputCustoAproximado={values.eletrica.custoAproximado}
-        inputCustoAproximadoError={errors?.eletrica?.custoAproximado}
-        inputCustoAproximadoTouched={touched?.eletrica?.custoAproximado}
         inputCustoAproximadoOnChange={(text: string) =>
           setFieldValue("eletrica.custoAproximado", text)
         }
@@ -84,8 +66,6 @@ const ThirdStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
         onPressSecondOption={(text) => setFieldValue("tapecaria.status", text)}
         onPressThirdOption={(text) => setFieldValue("tapecaria.status", text)}
         inputCustoAproximado={values.tapecaria.custoAproximado}
-        inputCustoAproximadoError={errors?.tapecaria?.custoAproximado}
-        inputCustoAproximadoTouched={touched?.tapecaria?.custoAproximado}
         inputCustoAproximadoOnChange={(text: string) =>
           setFieldValue("tapecaria.custoAproximado", text)
         }
@@ -103,8 +83,6 @@ const ThirdStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
         onPressSecondOption={(text) => setFieldValue("pneus.status", text)}
         onPressThirdOption={(text) => setFieldValue("pneus.status", text)}
         inputCustoAproximado={values.pneus.custoAproximado}
-        inputCustoAproximadoError={errors?.pneus?.custoAproximado}
-        inputCustoAproximadoTouched={touched?.pneus?.custoAproximado}
         inputCustoAproximadoOnChange={(text: string) =>
           setFieldValue("pneus.custoAproximado", text)
         }
@@ -122,8 +100,6 @@ const ThirdStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
         onPressSecondOption={(text) => setFieldValue("funilaria.status", text)}
         onPressThirdOption={(text) => setFieldValue("funilaria.status", text)}
         inputCustoAproximado={values.funilaria.custoAproximado}
-        inputCustoAproximadoError={errors?.funilaria?.custoAproximado}
-        inputCustoAproximadoTouched={touched?.funilaria?.custoAproximado}
         inputCustoAproximadoOnChange={(text: string) =>
           setFieldValue("funilaria.custoAproximado", text)
         }
@@ -141,8 +117,6 @@ const ThirdStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
         onPressSecondOption={(text) => setFieldValue("martelinho.status", text)}
         onPressThirdOption={(text) => setFieldValue("martelinho.status", text)}
         inputCustoAproximado={values.martelinho.custoAproximado}
-        inputCustoAproximadoError={errors?.martelinho?.custoAproximado}
-        inputCustoAproximadoTouched={touched?.martelinho?.custoAproximado}
         inputCustoAproximadoOnChange={(text: string) =>
           setFieldValue("martelinho.custoAproximado", text)
         }

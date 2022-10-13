@@ -11,6 +11,7 @@ import DoubleButtonsComponent from "../../../../components/doubleButtons";
 import FilterButton from "../../../../components/filterButton";
 import InputComponent from "../../../../components/input";
 import ModalApprovedOrReproved from "../../../../components/modalApproveOrReprove";
+import RadioButtonComponent from "../../../../components/radioButton";
 import RadioPagination from "../../../../components/radioPagination";
 import SimpleModal from "../../../../components/simpleModal";
 import {
@@ -94,15 +95,12 @@ const VehiclesPage: React.FC<VehiclesPageProps> = (props) => {
   const switchOptionsMenu = (item: any) => {
     switch (item) {
       case "Visualizar":
-        navigate("ViewAvaliation", {
-          id: cardId,
-        });
+        setCardOptionsVisible(false);
+        navigate("ViewAvaliation", { id: cardId });
         break;
       case "Editar":
-        navigate("RegisterAvaliation", {
-          isEditing: true,
-          id: cardId,
-        });
+        setCardOptionsVisible(false);
+        navigate("RegisterAvaliation", { isEditing: true, id: cardId });
         break;
       case "Aprovar":
         setCardOptionsVisible(false);
@@ -147,13 +145,10 @@ const VehiclesPage: React.FC<VehiclesPageProps> = (props) => {
           <FilterButton label="Filtrar" />
 
           <View style={styles.radioButtons}>
-            <RadioPagination
-              assessmentStatus={assessmentStatus}
-              setAssessmentStatus={setAssessmentStatus}
-              firstStatus="Waiting"
-              secondStatus="Approved"
-              firstLabel="Aguardando aprovação"
-              secondLabel="Reprovado"
+            <RadioButtonComponent
+              status={"checked"}
+              onPress={() => {}}
+              label={"Aguardando aprovação"}
             />
           </View>
         </View>

@@ -16,7 +16,7 @@ const CheckboxComponent: React.FC<CheckboxComponentProps> = (props) => {
   return (
     <View style={[style ?? styles.container]}>
       {!inverted && (
-        <View>
+        <View style={styles.container}>
           <Checkbox
             status={hasChecked ? "checked" : "unchecked"}
             onPress={() => setHasChecked(!hasChecked)}

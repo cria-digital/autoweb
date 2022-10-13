@@ -1,20 +1,14 @@
 import * as Yup from "yup";
-import { Avaliations } from "../../../../types";
 
 export const initialRegisterAvaliationValues = {
   nomeEmpresa: "",
-  filial: "",
   marca: "",
   modelo: "",
   versao: "",
   ano: "",
   anoFabricacao: "",
-  cambio: "",
-  numeroPartidas: "",
-  numeroPortas: "",
-  cor: "",
   renavam: "",
-  chassi: "",
+  km: "",
   placa: "",
   combustivel: "",
   tipoVeiculo: "",
@@ -52,11 +46,11 @@ export const initialRegisterAvaliationValues = {
   },
 
   valorFipe: "",
-  valorWebMotos: "",
-  valorRegiao: "",
+  valorWebMotors: "",
+  valorAutoWeb: "",
   valorMedio: "",
-  avaliacaoLoja: "",
-  avaliacaoEletronica: "",
+  valorAvaliadoEmpresa: "",
+  valorAvaliacao: "",
   valorSugeridoVenda: "",
   lucroPrevisto: "",
 };
@@ -64,29 +58,40 @@ export const initialRegisterAvaliationValues = {
 export const editingInitialRegisterAvaliationValues = (value) => {
   const avaliationValue = value?.Avaliacao;
   const avaliationItems = value?.Itens;
+  const checkItem = (check: any) => {
+    switch (check) {
+      case "False":
+        return "Não";
+      case "True":
+        return "Sim";
+    }
+  };
+
   const statusCheck = (status) => {
-    if (status === "0") return "Bom";
-    if (status === "1") return "Regular";
-    if (status === "2") return "Ruim";
+    switch (status) {
+      case "0":
+        return "Ruim";
+      case "1":
+        return "Bom";
+      case "2":
+        return "Ótimo";
+      default:
+        return "Bom";
+    }
   };
   return {
     nomeEmpresa: avaliationValue?.idEmpresa,
-    filial: "",
     marca: avaliationValue?.idMarca,
     modelo: avaliationValue?.idModelo,
     versao: avaliationValue?.idVersao,
     ano: avaliationValue?.AnoModelo,
     anoFabricacao: avaliationValue?.AnoFabricacao,
-    cambio: "",
-    numeroPartidas: "",
-    numeroPortas: "",
-    cor: "",
     renavam: avaliationValue?.Renavam,
-    chassi: "",
+    km: avaliationValue?.Km,
     placa: avaliationValue?.Placa,
     combustivel: avaliationValue?.idCombustivel,
     tipoVeiculo: avaliationValue?.idVeiculo,
-    blindado: avaliationValue?.Blindado,
+    blindado: checkItem(avaliationValue?.Blindado),
 
     mecanica: {
       status: statusCheck(avaliationItems?.vlItem) ?? "Bom",
@@ -119,12 +124,12 @@ export const editingInitialRegisterAvaliationValues = (value) => {
       observacoes: "",
     },
 
-    valorFipe: avaliationValue?.ValorFipe ?? "",
-    valorWebMotos: avaliationValue?.ValorWebMotos ?? "",
-    valorRegiao: "",
+    valorFipe: avaliationValue?.ValorFIPE ?? "",
+    valorWebMotors: avaliationValue?.ValorWebMotors ?? "",
+    valorAutoWeb: avaliationValue?.ValorAutoWeb ?? "",
     valorMedio: "",
-    avaliacaoLoja: avaliationValue?.ValorAvaliadoEmpresa ?? "",
-    avaliacaoEletronica: avaliationValue?.ValorAvaliacao ?? "",
+    valorAvaliadoEmpresa: avaliationValue?.ValorAvaliadoEmpresa ?? "",
+    valorAvaliacao: avaliationValue?.ValorAvaliacao ?? "",
     valorSugeridoVenda: avaliationValue?.ValorSugerido ?? "",
     lucroPrevisto: "",
   };
@@ -132,33 +137,14 @@ export const editingInitialRegisterAvaliationValues = (value) => {
 
 export const formSchemaRegisterAvaliation = Yup.object().shape({
   nomeEmpresa: Yup.string().required("Campo obrigatório"),
-  filial: Yup.string().required("Campo obrigatório"),
   ano: Yup.string().required("Campo obrigatório"),
   anoFabricacao: Yup.string().required("Campo obrigatório"),
-  mecanica: Yup.object().shape({
-    custoAproximado: Yup.string().required("Campo obrigatório"),
-  }),
-  eletrica: Yup.object().shape({
-    custoAproximado: Yup.string().required("Campo obrigatório"),
-  }),
-  tapecaria: Yup.object().shape({
-    custoAproximado: Yup.string().required("Campo obrigatório"),
-  }),
-  pneus: Yup.object().shape({
-    custoAproximado: Yup.string().required("Campo obrigatório"),
-  }),
-  funilaria: Yup.object().shape({
-    custoAproximado: Yup.string().required("Campo obrigatório"),
-  }),
-  martelinho: Yup.object().shape({
-    custoAproximado: Yup.string().required("Campo obrigatório"),
-  }),
   valorFipe: Yup.string().required("Campo obrigatório"),
   valorWebMotors: Yup.string().required("Campo obrigatório"),
-  valorRegiao: Yup.string().required("Campo obrigatório"),
+  valorAutoWeb: Yup.string().required("Campo obrigatório"),
   valorMedio: Yup.string().required("Campo obrigatório"),
-  avaliacaoLoja: Yup.string().required("Campo obrigatório"),
-  avaliacaoEletronica: Yup.string().required("Campo obrigatório"),
+  valorAvaliadoEmpresa: Yup.string().required("Campo obrigatório"),
+  valorAvaliacao: Yup.string().required("Campo obrigatório"),
   valorSugeridoVenda: Yup.string().required("Campo obrigatório"),
   lucroPrevisto: Yup.string().required("Campo obrigatório"),
 });

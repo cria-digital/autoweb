@@ -22,7 +22,7 @@ const FirstStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
   } = props;
   const { goBack } = useNavigation();
   const nextStep = () => {
-    if (!values.nomeEmpresa || !values.filial) {
+    if (!values.nomeEmpresa) {
       handleSubmit(values);
     } else {
       setCurrentStep(currentStep + 1);
@@ -43,18 +43,6 @@ const FirstStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
           placeholder={"Selecione o nome da empresa"}
           errorMessage={"Nome da empresa é obrigatório"}
           onPressMenuItem={(item) => setFieldValue("nomeEmpresa", item)}
-        />
-      </InputLayout>
-
-      <InputLayout required title="Filial" style={{ marginTop: 25 }}>
-        <InputComponent
-          mode="flat"
-          value={values.filial}
-          errors={errors.filial}
-          touched={touched.filial}
-          placeholder={"Digite a filial"}
-          errorMessage={"Filial é obrigatório"}
-          onChangeText={(text: string) => setFieldValue("filial", text)}
         />
       </InputLayout>
 

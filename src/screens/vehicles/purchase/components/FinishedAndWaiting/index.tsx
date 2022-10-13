@@ -7,16 +7,23 @@ import LoadMore from "../../../../../components/loadMore";
 import { baseUrlImages } from "../../../../../constants/baseUrls";
 
 interface FinishedAndAwaitingPurchaseTabProps {
-  assessmentStatus: string;
   setCardOptionsVisible: (status: boolean) => void;
+  setCarPlate: (carPlate: string) => void;
   setCardId: (id: string) => void;
+  assessmentStatus: string;
   data: Purchase[];
 }
 
 const FinishedAndAwaitingPurchaseTab: React.FC<
   FinishedAndAwaitingPurchaseTabProps
 > = (props) => {
-  const { assessmentStatus, setCardOptionsVisible, setCardId, data } = props;
+  const {
+    assessmentStatus,
+    setCardOptionsVisible,
+    setCardId,
+    data,
+    setCarPlate,
+  } = props;
   const renderFinishedRegistrations = ({ item, index }: any) => (
     <CardPurchase
       assessorName={item.Avaliador}
@@ -30,6 +37,7 @@ const FinishedAndAwaitingPurchaseTab: React.FC<
       onPressSignature={() => alert("Assinatura " + item.Avaliador)}
       onPressDots={() => {
         setCardId(item.IdVeiculo);
+        setCarPlate(item.Placa);
         setCardOptionsVisible(true);
       }}
     />

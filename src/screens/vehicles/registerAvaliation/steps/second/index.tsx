@@ -11,6 +11,7 @@ import NextBackButtons from "../../../../../components/nextBackButtons";
 import StepsTitle from "../../../../../components/stepsTitle";
 import {
   consultBrands,
+  consultFuel,
   consultModels,
   consultVersion,
 } from "../../../../../config/general";
@@ -21,6 +22,8 @@ import DropdownMarca from "../../../../../components/dropdownMarca";
 import DropdownModelo from "../../../../../components/dropdownModelo";
 import DropdownVersao from "../../../../../components/dropdownVersao";
 import Loading from "../../../../../components/loading";
+import { uploadImageForAvaliation } from "../../../../../config/avaliacao";
+import { getImage } from "../../../../../utils/getImage";
 
 const SecondStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
   props
@@ -45,6 +48,8 @@ const SecondStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
   const [brandString, setBrandString] = useState("");
   const [modelString, setModelString] = useState("");
   const [versionString, setVersionString] = useState("");
+
+  const [fuel, setFuel] = useState([]);
 
   const nextStep = () => {
     if (!values.ano || !values.anoFabricacao) {
@@ -94,7 +99,6 @@ const SecondStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
     if (isEditing) {
       const result = await consultVersion(values.modelo, tokenApi);
       setVersions(result?.Versoes);
-      setLoading(false);
       setFieldValue(
         "versao",
         result?.Versoes.filter((item) => item.idVersao === values.versao)[0]
@@ -111,6 +115,15 @@ const SecondStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
     }
   }
 
+  async function getGeneralValues(tokenAPI: string) {
+    const fuels = await consultFuel(tokenAPI);
+
+    if (fuels) {
+      setFuel(fuels.Combustivel);
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     const checkIfIsEditing = async () => {
       if (isEditing) {
@@ -118,6 +131,8 @@ const SecondStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
         getAllBrands();
         getAllModels();
         getAllVersions();
+        getGeneralValues(tokenApi);
+        setLoading(false);
       }
     };
     checkIfIsEditing();
@@ -135,6 +150,25 @@ const SecondStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
     if (values.modelo) getAllVersions();
   }, [values.modelo]);
 
+  async function uploadImageToAvaliation() {
+    await getImage().then(async (url) => {
+      console.log(url);
+      const result = await uploadImageForAvaliation(tokenApi, url);
+      if (result) {
+        alert("aconteceu algo");
+        console.log(result);
+      }
+    });
+  }
+
+  function getDropdownValue(
+    idCompare: string,
+    array: { id: string; result: string }[]
+  ) {
+    const filter = array?.filter((item) => item?.id === idCompare);
+    return filter[0]?.result;
+  }
+
   return (
     <View>
       {loading && <Loading isLoading style={{ marginTop: 200, height: 50 }} />}
@@ -151,7 +185,7 @@ const SecondStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
             iconSize={20}
             label={"Adicionar fotos do veículo"}
             style={{ marginTop: 30 }}
-            onPress={() => {}}
+            onPress={uploadImageToAvaliation}
           />
 
           <InputLayout style={{ marginTop: 30 }}>
@@ -219,36 +253,6 @@ const SecondStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
             rightHasInput
           />
 
-          <DoubleDropdown
-            onPressLeftMenuItem={(item) => setFieldValue("cambio", item)}
-            onPressRightMenuItem={(item) =>
-              setFieldValue("numeroPartidas", item)
-            }
-            leftContent={["Marca 1", "Marca 2", "Marca 3"]}
-            rightContent={["Marca 1", "Marca 2", "Marca 3"]}
-            leftPlaceholder={"Tipo de câmbio"}
-            rightPlaceholder={"Nº de partidas"}
-            leftValue={values.cambio}
-            rightValue={values.numeroPartidas}
-            leftTitle={"Câmbio"}
-            rightTitle={"Número de partidas"}
-            style={{ marginTop: 25 }}
-          />
-
-          <DoubleDropdown
-            onPressLeftMenuItem={(item) => setFieldValue("numeroPortas", item)}
-            onPressRightMenuItem={(item) => setFieldValue("cor", item)}
-            leftContent={["Marca 1", "Marca 2", "Marca 3"]}
-            rightContent={["Marca 1", "Marca 2", "Marca 3"]}
-            leftPlaceholder={"Nº de portas"}
-            rightPlaceholder={"Selecione a cor"}
-            leftValue={values.numeroPortas}
-            rightValue={values.cor}
-            leftTitle={"Número de portas"}
-            rightTitle={"Cor"}
-            style={{ marginTop: 25 }}
-          />
-
           <InputLayout title="Renavam" style={{ marginTop: 25 }}>
             <InputComponent
               mode="flat"
@@ -258,26 +262,32 @@ const SecondStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
             />
           </InputLayout>
 
-          <InputLayout title="Chassi" style={{ marginTop: 25 }}>
+          <InputLayout title="Km" style={{ marginTop: 25 }}>
             <InputComponent
               mode="flat"
-              value={values.chassi}
-              placeholder={"Digite o número do chassi aqui"}
-              onChangeText={(text: string) => setFieldValue("chassi", text)}
+              value={values.km}
+              placeholder={"Digite o número do km aqui"}
+              onChangeText={(text: string) => setFieldValue("km", text)}
             />
           </InputLayout>
 
           <DoubleDropdown
             onPressLeftMenuItem={(item) => setFieldValue("placa", item)}
-            onPressRightMenuItem={(text: string) =>
-              setFieldValue("combustivel", text)
-            }
-            leftContent={["Marca 1", "Marca 2", "Marca 3"]}
-            rightContent={["Marca 1", "Marca 2", "Marca 3"]}
+            onPressRightMenuItem={(item) => {
+              const result = fuel?.filter((fuel) => fuel?.Combustivel === item);
+              setFieldValue("combustivel", result[0]?.idCombustivel);
+            }}
+            rightContent={fuel?.map((item) => item?.Combustivel)}
             leftPlaceholder={"Digite a placa aqui"}
             rightPlaceholder={"Tipo de combustível"}
             leftValue={values.placa}
-            rightValue={values.combustivel}
+            rightValue={getDropdownValue(
+              values.combustivel,
+              fuel.map((item) => ({
+                id: item?.idCombustivel,
+                result: item?.Combustivel,
+              }))
+            )}
             leftTitle={"Placa"}
             rightTitle={"Combustível"}
             style={{ marginTop: 25 }}
@@ -290,7 +300,7 @@ const SecondStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
             leftContent={["Marca 1", "Marca 2", "Marca 3"]}
             rightContent={["Sim", "Não"]}
             leftPlaceholder={"Selecione o tipo"}
-            rightPlaceholder={"Tipo de blindagem"}
+            rightPlaceholder={"Blindado?"}
             leftValue={values.tipoVeiculo}
             rightValue={values.blindado}
             leftTitle={"Tipo de veículo"}

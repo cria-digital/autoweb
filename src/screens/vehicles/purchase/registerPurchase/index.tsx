@@ -4,10 +4,13 @@ import { View, ScrollView, BackHandler } from "react-native";
 import SimpleNav from "../../../../components/simpleNav";
 import Steps from "../../../../components/steps";
 import StepsRegisterPurchase from "../components/stepsRegisterPurchase";
+import StepsFour from "../../sell/addProposal/stepsFour";
 
 const RegisterPurchase = ({ navigation, route }: any) => {
   const { goBack } = navigation;
   const isEditing = route.params?.isEditing ?? false;
+  const carPlate = route.params?.carPlate ?? "";
+  const carID = route.params?.cardID ?? "";
   const [currentStep, setCurrentStep] = useState(0);
 
   const goBackSteps = () => {
@@ -40,9 +43,12 @@ const RegisterPurchase = ({ navigation, route }: any) => {
           onPressBack={goBackSteps}
         />
 
-        <Steps currentStep={currentStep} />
+        <StepsFour currentStep={currentStep} />
 
         <StepsRegisterPurchase
+          carPlate={carPlate}
+          carID={carID}
+          isEditing={isEditing}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
         />

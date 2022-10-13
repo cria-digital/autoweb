@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import { View } from "react-native";
 import { StepsRegisterAvaliationProps } from "..";
 import InputComponent from "../../../../../components/input";
@@ -23,7 +24,7 @@ const FourthStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
     if (
       !values.valorFipe ||
       !values.valorWebMotors ||
-      !values.valorRegiao ||
+      !values.valorAutoWeb ||
       !values.valorMedio
     ) {
       handleSubmit(values);
@@ -31,6 +32,21 @@ const FourthStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
       setCurrentStep(currentStep + 1);
     }
   };
+
+  const averageValues = () => {
+    const average =
+      parseInt(values.valorFipe) +
+      parseInt(values.valorWebMotors) +
+      parseInt(values.valorAutoWeb) / 3;
+    const finalResult = average.toFixed(2);
+    return finalResult.toString();
+  };
+
+  useEffect(() => {
+    if (values.valorFipe && values.valorWebMotors && values.valorAutoWeb)
+      setFieldValue("valorMedio", averageValues());
+  }, []);
+
   return (
     <View>
       <View style={{ marginTop: 30 }}>
@@ -74,17 +90,17 @@ const FourthStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
 
       <InputLayout
         required
-        title="Valor de venda na Região"
+        title="Valor de venda na AutoWeb"
         style={{ marginTop: 25 }}
       >
         <InputComponent
           mode="flat"
-          value={values.valorRegiao}
-          errors={errors.valorRegiao}
-          touched={touched.valorRegiao}
-          placeholder={"Valor de venda na Região (R$)"}
-          errorMessage={"Valor de venda na Região é obrigatório"}
-          onChangeText={(text: string) => setFieldValue("valorRegiao", text)}
+          value={values.valorAutoWeb}
+          errors={errors.valorAutoWeb}
+          touched={touched.valorAutoWeb}
+          placeholder={"Valor de venda na AutoWeb (R$)"}
+          errorMessage={"Valor de venda na AutoWeb é obrigatório"}
+          onChangeText={(text: string) => setFieldValue("valorAutoWeb", text)}
         />
       </InputLayout>
 
@@ -93,11 +109,9 @@ const FourthStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
           mode="flat"
           disabled
           style={{ backgroundColor: "#C9D3E9" }}
-          value={values.valorMedio}
-          errors={errors.valorMedio}
-          touched={touched.valorMedio}
-          placeholder={"Valor de venda Web Motors"}
-          errorMessage={"Valor de venda Web Motors é obrigatório"}
+          value={averageValues()}
+          placeholder={"Valor Médio da avaliação (R$)"}
+          errorMessage={"Valor Médio da avaliação é obrigatório"}
         />
       </InputLayout>
 

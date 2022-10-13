@@ -10,6 +10,7 @@ import InputComponent from "../../../components/input";
 import RadioPagination from "../../../components/radioPagination";
 import {
   cancelPurchaseVehicle,
+  consultPurchaseByPlate,
   consultPurchases,
 } from "../../../config/compra";
 import MagnifyIcon from "../../../icons/magnify";
@@ -29,6 +30,7 @@ const PurchaseTabScreen: React.FC<PurchaseTabScreenProps> = (props) => {
   const { navigate } = navigation;
   const { tokenApi } = useRecoilValue(AuthStatus);
   const [cardID, setCardID] = useState<string>("");
+  const [carPlate, setCarPlate] = useState<string>("");
   const [cardOptionsVisible, setCardOptionsVisible] = useState(false);
   const [registrationPage, setRegistrationPage] = useState("Finished");
   const [generateReportModal, setGenerateReportModal] = useState(false);
@@ -66,14 +68,12 @@ const PurchaseTabScreen: React.FC<PurchaseTabScreenProps> = (props) => {
   const switchOptionsMenu = (item: any) => {
     switch (item) {
       case "Visualizar":
-        navigate("ViewPurchase", {
-          id: cardID,
-        });
+        setCardOptionsVisible(false);
+        navigate("ViewPurchase", { id: cardID });
         break;
       case "Editar":
-        navigate("RegisterPurchase", {
-          isEditing: true,
-        });
+        setCardOptionsVisible(false);
+        navigate("RegisterPurchase", { isEditing: true, cardID });
         break;
       case "Liberar compra":
         setCardOptionsVisible(false);
@@ -128,8 +128,9 @@ const PurchaseTabScreen: React.FC<PurchaseTabScreenProps> = (props) => {
       <View style={{ height: "auto" }}>
         <FinishedAndAwaitingPurchaseTab
           data={purchaseList}
-          assessmentStatus={registrationPage}
           setCardId={setCardID}
+          setCarPlate={setCarPlate}
+          assessmentStatus={registrationPage}
           setCardOptionsVisible={setCardOptionsVisible}
         />
       </View>

@@ -24,7 +24,9 @@ const VehiclesScreen = ({ navigation, route }: any) => {
       <Nav userImage={userImage} onPressMenu={() => setMenuModal(true)} />
 
       <View style={styles.container}>
-        <View style={{ zIndex: 3 }}>
+        <View
+          style={{ zIndex: 3, alignItems: "center", justifyContent: "center" }}
+        >
           <PaginationPages
             currentPage={currentPage}
             pages={vehiclesPaginationData}

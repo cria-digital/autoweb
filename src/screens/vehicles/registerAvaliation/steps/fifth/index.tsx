@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import { View } from "react-native";
 import { StepsRegisterAvaliationProps } from "..";
 import InputComponent from "../../../../../components/input";
@@ -17,46 +18,56 @@ const FifthStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
     handleSubmit,
     cancelRegister,
   } = props;
-  const nextStep = () => {
-    handleSubmit(values);
+  const nextStep = () => handleSubmit(values);
+
+  const handleLucroTotal = () => {
+    const lucroTotal =
+      parseFloat(values.valorAvaliacao) - parseFloat(values.valorSugeridoVenda);
+    const fixedValue = lucroTotal.toFixed(2);
+    return fixedValue.toString();
   };
+
+  useEffect(() => {
+    setFieldValue("lucroPrevisto", handleLucroTotal());
+  }, [
+    values.valorAvaliacao,
+    values.valorSugeridoVenda,
+    values.valorAvaliadoEmpresa,
+  ]);
+
   return (
     <View>
       <View style={{ marginTop: 30 }}>
         <StepsTitle title="Resumo" allRequired />
       </View>
 
-      <InputLayout required title="Avaliação da loja" style={{ marginTop: 25 }}>
-        <InputComponent
-          mode="flat"
-          value={values.avaliacaoLoja}
-          errors={errors.avaliacaoLoja}
-          touched={touched.avaliacaoLoja}
-          placeholder={"Avaliação da loja (R$)"}
-          errorMessage={"Avaliação da loja é obrigatório"}
-          onChangeText={(text: string) => {
-            setFieldValue("avaliacaoLoja", text);
-            setFieldValue("avaliacaoEletronica", text);
-            setFieldValue("valorSugeridoVenda", text);
-            setFieldValue("lucroPrevisto", text);
-          }}
-        />
-      </InputLayout>
-
       <InputLayout
         required
-        title="Avaliação eletrônica"
+        title="Avaliação da Empresa"
         style={{ marginTop: 25 }}
       >
         <InputComponent
           mode="flat"
-          disabled
-          style={{ backgroundColor: "#C9D3E9" }}
-          value={values.avaliacaoEletronica}
-          errors={errors.avaliacaoEletronica}
-          touched={touched.avaliacaoEletronica}
-          placeholder={"Avaliação eletrônica (R$)"}
-          errorMessage={"Avaliação eletrônica é obrigatório"}
+          value={values.valorAvaliadoEmpresa}
+          errors={errors.valorAvaliadoEmpresa}
+          touched={touched.valorAvaliadoEmpresa}
+          placeholder={"Avaliação da loja (R$)"}
+          errorMessage={"Avaliação da loja é obrigatório"}
+          onChangeText={(text: string) =>
+            setFieldValue("valorAvaliadoEmpresa", text)
+          }
+        />
+      </InputLayout>
+
+      <InputLayout required title="Valor Avaliação" style={{ marginTop: 25 }}>
+        <InputComponent
+          mode="flat"
+          value={values.valorAvaliacao}
+          errors={errors.valorAvaliacao}
+          touched={touched.valorAvaliacao}
+          onChangeText={(text: string) => setFieldValue("valorAvaliacao", text)}
+          placeholder={"Valor Avaliação (R$)"}
+          errorMessage={"Valor Avaliação é obrigatório"}
         />
       </InputLayout>
 
@@ -67,11 +78,12 @@ const FifthStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
       >
         <InputComponent
           mode="flat"
-          disabled
-          style={{ backgroundColor: "#C9D3E9" }}
           value={values.valorSugeridoVenda}
           errors={errors.valorSugeridoVenda}
           touched={touched.valorSugeridoVenda}
+          onChangeText={(text: string) =>
+            setFieldValue("valorSugeridoVenda", text)
+          }
           placeholder={"Valor sugerido para venda"}
           errorMessage={"Valor sugerido para venda"}
         />
@@ -82,11 +94,11 @@ const FifthStepRegisterAvaliation: React.FC<StepsRegisterAvaliationProps> = (
           mode="flat"
           disabled
           style={{ backgroundColor: "#C9D3E9" }}
-          value={values.lucroPrevisto}
+          value={handleLucroTotal()}
           errors={errors.lucroPrevisto}
           touched={touched.lucroPrevisto}
           placeholder={"Lucro previsto"}
-          errorMessage={"Lucro previsto"}
+          errorMessage={"Lucro previsto obrigatório"}
         />
       </InputLayout>
 

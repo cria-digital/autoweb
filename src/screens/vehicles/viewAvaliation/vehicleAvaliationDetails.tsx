@@ -5,8 +5,8 @@ import styles from "./styles";
 
 interface VehicleAvaliationDetailsProps {
   empresa: string;
-  renavan: string;
-  filial: string;
+  renavam: string;
+  Km: string;
   chassi: string;
   marca: string;
   numeroPartidas: string;
@@ -28,8 +28,8 @@ const VehicleAvaliationDetails: React.FC<VehicleAvaliationDetailsProps> = (
 ) => {
   const {
     empresa,
-    renavan,
-    filial,
+    renavam,
+    Km,
     chassi,
     marca,
     numeroPartidas,
@@ -50,12 +50,12 @@ const VehicleAvaliationDetails: React.FC<VehicleAvaliationDetailsProps> = (
       <RenderDoubleTextColumns
         leftTitle="Empresa"
         leftValue={empresa}
-        rightTitle="Renavan"
-        rightValue={renavan}
+        rightTitle="Renavam"
+        rightValue={renavam}
       />
       <RenderDoubleTextColumns
-        leftTitle="Filial"
-        leftValue={filial}
+        leftTitle="Km"
+        leftValue={Km}
         rightTitle="Chassi"
         rightValue={chassi}
       />

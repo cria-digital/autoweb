@@ -16,6 +16,7 @@ import AlertModal from "../../../../components/alertModal";
 import {
   editAvaliation,
   registerAvaliation,
+  updateAvaliation,
 } from "../../../../config/avaliacao";
 import { useRecoilValue } from "recoil";
 import AuthStatus from "../../../../atoms/auth";
@@ -49,15 +50,22 @@ const StepsRegisterAvaliation: React.FC<MainStepsRegisterAvaliationProps> = (
   const [cancelAvaliationModal, setCancelAvaliationModal] = useState(false);
   const [avaliationDeleted, setAvaliationDeleted] = useState(false);
   const [avaliationRegistered, setAvaliationRegistered] = useState(false);
+  const [avaliationEdited, setAvaliationEdited] = useState(false);
   const [initialFormikValues, setInitialFormikValues] = useState({});
+  const [idAvaliation, setIdAvaliation] = useState("");
   const [loading, setLoading] = useState(true);
-  const registerNewAvaliation = async (values) => {
+  const registerNewAvaliation = async (values: any) => {
     const result = await registerAvaliation(values, tokenApi);
+    if (result) setAvaliationRegistered(true);
+  };
+  const updateExistingAvaliation = async (values: any) => {
+    const result = await updateAvaliation(values, tokenApi, idAvaliation);
     if (result) setAvaliationRegistered(true);
   };
 
   const handleSubmitForm = async (values: any) => {
     if (!isEditing) await registerNewAvaliation(values);
+    else await updateExistingAvaliation(values);
   };
 
   useEffect(() => {
@@ -65,6 +73,7 @@ const StepsRegisterAvaliation: React.FC<MainStepsRegisterAvaliationProps> = (
       const result = await editAvaliation(id, tokenApi);
       if (result) {
         setInitialFormikValues(editingInitialRegisterAvaliationValues(result));
+        setIdAvaliation(result?.Avaliacao?.idAvaliacao);
         setLoading(false);
       }
     };
@@ -200,6 +209,23 @@ const StepsRegisterAvaliation: React.FC<MainStepsRegisterAvaliationProps> = (
         setVisible={setAvaliationRegistered}
         cancelOrClose={() => {
           setAvaliationRegistered(false);
+          navigate("Vehicles");
+        }}
+      />
+
+      <AlertModal
+        visible={avaliationEdited}
+        animationType="fade"
+        firstButtonLabel="Fechar"
+        okMessage
+        beforeFirstStrongText="A"
+        firstStrongText="avaliação"
+        middleStrongText="foi"
+        secondStrongText="editada"
+        afterSecondStrongText="com sucesso!"
+        setVisible={setAvaliationEdited}
+        cancelOrClose={() => {
+          setAvaliationEdited(false);
           navigate("Vehicles");
         }}
       />
