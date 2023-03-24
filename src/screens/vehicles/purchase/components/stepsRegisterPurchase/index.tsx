@@ -41,7 +41,7 @@ const StepsRegisterPurchase: React.FC<MainStepsRegisterAvaliationProps> = (
   const [purchaseDeleted, setPurchaseDeleted] = useState(false);
   const [finishedRegister, setFinishedRegister] = useState(false);
   const [initialFormikValues, setInitialFormikValues] = useState({});
-  const [idVehicle, setIdVehicle] = useState("");
+  const [idVehicle, setIdVehicle] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const { tokenApi } = useRecoilValue(AuthStatus);
   const registerNewPurchase = async (values: any) => {

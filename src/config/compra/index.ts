@@ -233,7 +233,7 @@ export const updateVehiclePurchase = async (
     Portas: values.numeroPortas,
     Combustivel: values.combustivel,
     TipoVeiculo: values.tipoVeiculo,
-    Blindando: checkStatus(values.blindado),
+    Blindado: checkStatus(values.blindado),
     Sucata: checkStatus(values.sucata),
     Leilao: checkStatus(values.leilao),
     Km: values.km,
